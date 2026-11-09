@@ -1,18 +1,11 @@
 import AreaChart from "../ui/area-chart";
-import type { ChartPoint } from "../ui/area-chart";
+import type { WeatherSnapshot } from "../../lib/weather-data";
 
-// ข้อมูลสมมติสำหรับออกแบบหน้าเว็บ ไม่ใช่อากาศย้อนหลังจริง
-const mockHistory: ChartPoint[] = [
-  { label: "Mon", value: 29 },
-  { label: "Tue", value: 31 },
-  { label: "Wed", value: 30 },
-  { label: "Thu", value: 33 },
-  { label: "Fri", value: 32 },
-  { label: "Sat", value: 30 },
-  { label: "Sun", value: 28 },
-];
-
-export default function WeatherAnalytics() {
+export default function WeatherAnalytics({ weather }: { weather: WeatherSnapshot }) {
+  const mockHistory = weather.history;
+  if (mockHistory.length === 0) {
+    return <section className="mt-12 rounded-2xl border border-white/10 p-8"><h2 className="text-xl">Weather Analytics</h2><p className="mt-3 text-slate-400">ยังไม่มีข้อมูลย้อนหลังสำหรับ {weather.location}</p></section>;
+  }
   const values = mockHistory.map((point) => point.value);
   const average =
     values.reduce((sum, value) => sum + value, 0) / values.length;
@@ -42,7 +35,7 @@ export default function WeatherAnalytics() {
           </h2>
 
           <p className="mt-3 text-sm text-slate-400">
-            A closer look at temperature patterns in Lat Phrao, Bangkok.
+            Temperature patterns · {weather.location}
           </p>
         </div>
 
@@ -84,9 +77,10 @@ export default function WeatherAnalytics() {
         </div>
 
         <AreaChart
+          key={weather.location}
           data={mockHistory}
           unit="°C"
-          label="Sample daily average temperatures for Lat Phrao"
+          label={`Sample daily average temperatures for ${weather.location}`}
         />
 
         <details className="mt-5 text-xs text-slate-400">

@@ -1,6 +1,5 @@
 import ScrollExpandMedia from "../components/ui/scroll-expansion-hero";
-import CurrentWeather from "../components/weather/CurrentWeather";
-import WeatherAnalytics from "../components/weather/WeatherAnalytics";
+import WeatherExplorer from "../components/weather/WeatherExplorer";
 
 export default function Home() {
   return (
@@ -11,8 +10,7 @@ export default function Home() {
       subtitle="Weather forecasts for Bangkok and the surrounding metropolitan area."
       scrollToExpand="Scroll to explore"
     >
-      <CurrentWeather />
-      <WeatherAnalytics />
+      <WeatherExplorer />
     </ScrollExpandMedia>
   );
 }

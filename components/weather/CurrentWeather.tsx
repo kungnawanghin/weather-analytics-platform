@@ -1,22 +1,6 @@
-interface CurrentWeatherData {
-  location: string;
-  temperature: number;
-  humidity: number;
-  windSpeed: number;
-  condition: string;
-}
+import type { WeatherSnapshot } from "../../lib/weather-data";
 
-// ข้อมูลสมมติสำหรับพัฒนาหน้าตาเว็บ
-const mockWeather: CurrentWeatherData = {
-  location: "Lat Phrao, Bangkok",
-  temperature: 32,
-  humidity: 68,
-  windSpeed: 12,
-  condition: "Partly cloudy",
-};
-
-export default function CurrentWeather() {
-  const weather = mockWeather;
+export default function CurrentWeather({ weather }: { weather: WeatherSnapshot }) {
 
   return (
     <section aria-labelledby="current-weather-title">
@@ -81,7 +65,7 @@ export default function CurrentWeather() {
       </div>
 
       <p className="mt-4 text-xs leading-relaxed text-slate-500">
-        Sample values for interface development. Not live weather data.
+        {weather.reference} · ไม่ใช่ข้อมูลอากาศจริง
       </p>
     </section>
   );
