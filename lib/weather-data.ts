@@ -15,6 +15,8 @@ export interface WeatherSnapshot {
   humidity: number;
   windSpeed: number;
   condition: string;
+  conditionIcon?: WeatherCondition;
+  live?: { validAt: string; fetchedAt: string };
   history: WeatherHistoryDay[];
   forecast: ForecastDay[];
 }

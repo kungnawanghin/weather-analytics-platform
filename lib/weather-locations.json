@@ -1,0 +1,1022 @@
+[
+  {
+    "area": {
+      "id": "TH-10",
+      "provinceId": "TH-10",
+      "name": "กรุงเทพมหานคร",
+      "provinceName": "กรุงเทพมหานคร",
+      "level": "province"
+    },
+    "longitude": 100.61925,
+    "latitude": 13.78202,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "TH-12",
+      "provinceId": "TH-12",
+      "name": "นนทบุรี",
+      "provinceName": "นนทบุรี",
+      "level": "province"
+    },
+    "longitude": 100.41303,
+    "latitude": 13.92084,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "TH-13",
+      "provinceId": "TH-13",
+      "name": "ปทุมธานี",
+      "provinceName": "ปทุมธานี",
+      "level": "province"
+    },
+    "longitude": 100.62299,
+    "latitude": 14.06018,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "TH-73",
+      "provinceId": "TH-73",
+      "name": "นครปฐม",
+      "provinceName": "นครปฐม",
+      "level": "province"
+    },
+    "longitude": 100.03974,
+    "latitude": 14.0324,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "TH-74",
+      "provinceId": "TH-74",
+      "name": "สมุทรสาคร",
+      "provinceName": "สมุทรสาคร",
+      "level": "province"
+    },
+    "longitude": 100.2333,
+    "latitude": 13.54535,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "TH-11",
+      "provinceId": "TH-11",
+      "name": "สมุทรปราการ",
+      "provinceName": "สมุทรปราการ",
+      "level": "province"
+    },
+    "longitude": 100.6798,
+    "latitude": 13.57489,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B41699219692517",
+      "provinceId": "TH-74",
+      "provinceName": "สมุทรสาคร",
+      "name": "บ้านแพ้ว",
+      "level": "district"
+    },
+    "longitude": 100.13007,
+    "latitude": 13.60982,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B88692242384139",
+      "provinceId": "TH-11",
+      "provinceName": "สมุทรปราการ",
+      "name": "บางบ่อ",
+      "level": "district"
+    },
+    "longitude": 100.8998,
+    "latitude": 13.63136,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B77948152062617",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "บางบอน",
+      "level": "district"
+    },
+    "longitude": 100.38129,
+    "latitude": 13.65484,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B62915491742663",
+      "provinceId": "TH-12",
+      "provinceName": "นนทบุรี",
+      "name": "บางบัวทอง",
+      "level": "district"
+    },
+    "longitude": 100.38828,
+    "latitude": 13.91799,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B79450703987233",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "บางกะปิ",
+      "level": "district"
+    },
+    "longitude": 100.64069,
+    "latitude": 13.75052,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B64329347166789",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "บางแค",
+      "level": "district"
+    },
+    "longitude": 100.39401,
+    "latitude": 13.73029,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B44452950449651",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "บางเขน",
+      "level": "district"
+    },
+    "longitude": 100.63652,
+    "latitude": 13.86973,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B71944934513319",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "บางคอแหลม",
+      "level": "district"
+    },
+    "longitude": 100.51144,
+    "latitude": 13.69831,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B82551730136395",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "บางขุนเทียน",
+      "level": "district"
+    },
+    "longitude": 100.42885,
+    "latitude": 13.61635,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B85979697822456",
+      "provinceId": "TH-12",
+      "provinceName": "นนทบุรี",
+      "name": "บางกรวย",
+      "level": "district"
+    },
+    "longitude": 100.41807,
+    "latitude": 13.80923,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B43519510241877",
+      "provinceId": "TH-73",
+      "provinceName": "นครปฐม",
+      "name": "บางเลน",
+      "level": "district"
+    },
+    "longitude": 100.17297,
+    "latitude": 14.10697,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B90575155663708",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "บางนา",
+      "level": "district"
+    },
+    "longitude": 100.61766,
+    "latitude": 13.66826,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B20944383607062",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "บางพลัด",
+      "level": "district"
+    },
+    "longitude": 100.48723,
+    "latitude": 13.78889,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B84891399333376",
+      "provinceId": "TH-11",
+      "provinceName": "สมุทรปราการ",
+      "name": "บางพลี",
+      "level": "district"
+    },
+    "longitude": 100.70727,
+    "latitude": 13.63032,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B21666986895715",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "บางรัก",
+      "level": "district"
+    },
+    "longitude": 100.52834,
+    "latitude": 13.72608,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B16455268499709",
+      "provinceId": "TH-11",
+      "provinceName": "สมุทรปราการ",
+      "name": "บางเสาธง",
+      "level": "district"
+    },
+    "longitude": 100.81156,
+    "latitude": 13.67881,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B39307621639221",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "บางซื่อ",
+      "level": "district"
+    },
+    "longitude": 100.52555,
+    "latitude": 13.81856,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B13602434515216",
+      "provinceId": "TH-12",
+      "provinceName": "นนทบุรี",
+      "name": "บางใหญ่",
+      "level": "district"
+    },
+    "longitude": 100.3728,
+    "latitude": 13.86123,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B69407198721734",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "บางกอกน้อย",
+      "level": "district"
+    },
+    "longitude": 100.47292,
+    "latitude": 13.76188,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B71650774119704",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "บางกอกใหญ่",
+      "level": "district"
+    },
+    "longitude": 100.47701,
+    "latitude": 13.74241,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B8359958585386",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "บึงกุ่ม",
+      "level": "district"
+    },
+    "longitude": 100.6434,
+    "latitude": 13.82054,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B62274513828859",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "จตุจักร",
+      "level": "district"
+    },
+    "longitude": 100.56353,
+    "latitude": 13.82199,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B14183764465064",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "จอมทอง",
+      "level": "district"
+    },
+    "longitude": 100.45985,
+    "latitude": 13.69456,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B98953458091915",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "ดินแดง",
+      "level": "district"
+    },
+    "longitude": 100.55591,
+    "latitude": 13.76202,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B41051617960371",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "ดอนเมือง",
+      "level": "district"
+    },
+    "longitude": 100.59413,
+    "latitude": 13.92648,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B74953703233818",
+      "provinceId": "TH-73",
+      "provinceName": "นครปฐม",
+      "name": "ดอนตูม",
+      "level": "district"
+    },
+    "longitude": 100.08309,
+    "latitude": 13.9433,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B42559616125747",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "ดุสิต",
+      "level": "district"
+    },
+    "longitude": 100.51325,
+    "latitude": 13.77297,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B70795195201443",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "ห้วยขวาง",
+      "level": "district"
+    },
+    "longitude": 100.58363,
+    "latitude": 13.75042,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B43600693402373",
+      "provinceId": "TH-73",
+      "provinceName": "นครปฐม",
+      "name": "กำแพงแสน",
+      "level": "district"
+    },
+    "longitude": 99.93739,
+    "latitude": 14.0662,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B51351558142585",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "คันนายาว",
+      "level": "district"
+    },
+    "longitude": 100.66804,
+    "latitude": 13.83802,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B47132537574289",
+      "provinceId": "TH-13",
+      "provinceName": "ปทุมธานี",
+      "name": "คลองหลวง",
+      "level": "district"
+    },
+    "longitude": 100.66896,
+    "latitude": 14.12489,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B63741991281097",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "คลองสามวา",
+      "level": "district"
+    },
+    "longitude": 100.73444,
+    "latitude": 13.85316,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B86497108686026",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "คลองสาน",
+      "level": "district"
+    },
+    "longitude": 100.50217,
+    "latitude": 13.72303,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B43095754832061",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "คลองเตย",
+      "level": "district"
+    },
+    "longitude": 100.57765,
+    "latitude": 13.70662,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B60884985036965",
+      "provinceId": "TH-74",
+      "provinceName": "สมุทรสาคร",
+      "name": "กระทุ่มแบน",
+      "level": "district"
+    },
+    "longitude": 100.25691,
+    "latitude": 13.66995,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B56226274044395",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "หลักสี่",
+      "level": "district"
+    },
+    "longitude": 100.57333,
+    "latitude": 13.8869,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B96049441570436",
+      "provinceId": "TH-13",
+      "provinceName": "ปทุมธานี",
+      "name": "ลำลูกกา",
+      "level": "district"
+    },
+    "longitude": 100.75989,
+    "latitude": 13.96564,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B46231034587858",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "ลาดกระบัง",
+      "level": "district"
+    },
+    "longitude": 100.79337,
+    "latitude": 13.73666,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B45209726561008",
+      "provinceId": "TH-13",
+      "provinceName": "ปทุมธานี",
+      "name": "ลาดหลุมแก้ว",
+      "level": "district"
+    },
+    "longitude": 100.41505,
+    "latitude": 14.04491,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B95574148528109",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "ลาดพร้าว",
+      "level": "district"
+    },
+    "longitude": 100.60672,
+    "latitude": 13.82779,
+    "method": "geonames"
+  },
+  {
+    "area": {
+      "id": "78962969B59018064980934",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "มีนบุรี",
+      "level": "district"
+    },
+    "longitude": 100.75428,
+    "latitude": 13.80745,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B95320028173020",
+      "provinceId": "TH-73",
+      "provinceName": "นครปฐม",
+      "name": "เมืองนครปฐม",
+      "level": "district"
+    },
+    "longitude": 100.01751,
+    "latitude": 13.85024,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B57513030361621",
+      "provinceId": "TH-12",
+      "provinceName": "นนทบุรี",
+      "name": "เมืองนนทบุรี",
+      "level": "district"
+    },
+    "longitude": 100.49402,
+    "latitude": 13.85878,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B64886483161753",
+      "provinceId": "TH-13",
+      "provinceName": "ปทุมธานี",
+      "name": "เมืองปทุมธานี",
+      "level": "district"
+    },
+    "longitude": 100.52428,
+    "latitude": 14.00892,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B45511956766283",
+      "provinceId": "TH-11",
+      "provinceName": "สมุทรปราการ",
+      "name": "เมืองสมุทรปราการ",
+      "level": "district"
+    },
+    "longitude": 100.63957,
+    "latitude": 13.56418,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B74449724715778",
+      "provinceId": "TH-74",
+      "provinceName": "สมุทรสาคร",
+      "name": "เมืองสมุทรสาคร",
+      "level": "district"
+    },
+    "longitude": 100.26295,
+    "latitude": 13.51155,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B40906880836111",
+      "provinceId": "TH-73",
+      "provinceName": "นครปฐม",
+      "name": "นครชัยศรี",
+      "level": "district"
+    },
+    "longitude": 100.19142,
+    "latitude": 13.86824,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B63126335713570",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "หนองจอก",
+      "level": "district"
+    },
+    "longitude": 100.86859,
+    "latitude": 13.81611,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B88059812817322",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "หนองแขม",
+      "level": "district"
+    },
+    "longitude": 100.35862,
+    "latitude": 13.68197,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B25224314923642",
+      "provinceId": "TH-13",
+      "provinceName": "ปทุมธานี",
+      "name": "หนองเสือ",
+      "level": "district"
+    },
+    "longitude": 100.83452,
+    "latitude": 14.2066,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B33148689371757",
+      "provinceId": "TH-12",
+      "provinceName": "นนทบุรี",
+      "name": "ปากเกร็ด",
+      "level": "district"
+    },
+    "longitude": 100.50299,
+    "latitude": 13.93322,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B24986508007859",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "ปทุมวัน",
+      "level": "district"
+    },
+    "longitude": 100.53346,
+    "latitude": 13.73869,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B24631471480950",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "ภาษีเจริญ",
+      "level": "district"
+    },
+    "longitude": 100.43843,
+    "latitude": 13.73889,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B58585163382090",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "พญาไท",
+      "level": "district"
+    },
+    "longitude": 100.54723,
+    "latitude": 13.78731,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B55596072077458",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "พระโขนง",
+      "level": "district"
+    },
+    "longitude": 100.61031,
+    "latitude": 13.696,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B48360013024769",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "พระนคร",
+      "level": "district"
+    },
+    "longitude": 100.49726,
+    "latitude": 13.75735,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B48513607541542",
+      "provinceId": "TH-11",
+      "provinceName": "สมุทรปราการ",
+      "name": "พระประแดง",
+      "level": "district"
+    },
+    "longitude": 100.55491,
+    "latitude": 13.64982,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B59575898831596",
+      "provinceId": "TH-11",
+      "provinceName": "สมุทรปราการ",
+      "name": "พระสมุทรเจดีย์",
+      "level": "district"
+    },
+    "longitude": 100.52145,
+    "latitude": 13.54102,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B43033268258309",
+      "provinceId": "TH-73",
+      "provinceName": "นครปฐม",
+      "name": "พุทธมณฑล",
+      "level": "district"
+    },
+    "longitude": 100.2818,
+    "latitude": 13.80561,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B85320273123577",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "ป้อมปราบศัตรูพ่าย",
+      "level": "district"
+    },
+    "longitude": 100.51031,
+    "latitude": 13.74701,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B62937206462024",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "ประเวศ",
+      "level": "district"
+    },
+    "longitude": 100.67282,
+    "latitude": 13.69913,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B18943250736788",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "ราษฎร์บูรณะ",
+      "level": "district"
+    },
+    "longitude": 100.49655,
+    "latitude": 13.66354,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B82033887386179",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "ราชเทวี",
+      "level": "district"
+    },
+    "longitude": 100.54193,
+    "latitude": 13.75318,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B64116960890602",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "สายไหม",
+      "level": "district"
+    },
+    "longitude": 100.65069,
+    "latitude": 13.89515,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B41113912709899",
+      "provinceId": "TH-12",
+      "provinceName": "นนทบุรี",
+      "name": "ไทรน้อย",
+      "level": "district"
+    },
+    "longitude": 100.30862,
+    "latitude": 14.00489,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B46863562743869",
+      "provinceId": "TH-13",
+      "provinceName": "ปทุมธานี",
+      "name": "สามโคก",
+      "level": "district"
+    },
+    "longitude": 100.50366,
+    "latitude": 14.1051,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B70843901453071",
+      "provinceId": "TH-73",
+      "provinceName": "นครปฐม",
+      "name": "สามพราน",
+      "level": "district"
+    },
+    "longitude": 100.17817,
+    "latitude": 13.6955,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B78328018981933",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "สัมพันธวงศ์",
+      "level": "district"
+    },
+    "longitude": 100.50752,
+    "latitude": 13.73856,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B37896231251268",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "สะพานสูง",
+      "level": "district"
+    },
+    "longitude": 100.69046,
+    "latitude": 13.77529,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B57919474821024",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "สาทร",
+      "level": "district"
+    },
+    "longitude": 100.52958,
+    "latitude": 13.71795,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B46335103611248",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "สวนหลวง",
+      "level": "district"
+    },
+    "longitude": 100.62778,
+    "latitude": 13.73901,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B19319663226998",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "ตลิ่งชัน",
+      "level": "district"
+    },
+    "longitude": 100.43967,
+    "latitude": 13.79369,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B80991163845890",
+      "provinceId": "TH-13",
+      "provinceName": "ปทุมธานี",
+      "name": "ธัญบุรี",
+      "level": "district"
+    },
+    "longitude": 100.65849,
+    "latitude": 13.99572,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B31670435766777",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "ทวีวัฒนา",
+      "level": "district"
+    },
+    "longitude": 100.37025,
+    "latitude": 13.80072,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B37359876414663",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "ธนบุรี",
+      "level": "district"
+    },
+    "longitude": 100.48098,
+    "latitude": 13.71259,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B48707733075976",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "ทุ่งครุ",
+      "level": "district"
+    },
+    "longitude": 100.49399,
+    "latitude": 13.65153,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B23901249409330",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "วัฒนา",
+      "level": "district"
+    },
+    "longitude": 100.58181,
+    "latitude": 13.73747,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B59221573730573",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "วังทองหลาง",
+      "level": "district"
+    },
+    "longitude": 100.61018,
+    "latitude": 13.78606,
+    "method": "boundary-interior"
+  },
+  {
+    "area": {
+      "id": "78962969B14857806522936",
+      "provinceId": "TH-10",
+      "provinceName": "กรุงเทพมหานคร",
+      "name": "ยานนาวา",
+      "level": "district"
+    },
+    "longitude": 100.53466,
+    "latitude": 13.68302,
+    "method": "boundary-interior"
+  }
+]

@@ -19,7 +19,7 @@ export default function WeatherForecast({ weather }: { weather: WeatherSnapshot 
           <h2 id="forecast-title" className="mt-3 text-[27px] font-semibold tracking-[-0.035em] text-slate-100 sm:text-3xl">A little further ahead.</h2>
           <p className="mt-3 text-sm leading-6 text-slate-400">พยากรณ์รายวัน · {weather.location} · เวลาไทย (UTC+7)</p>
         </div>
-        <span className="inline-flex items-center gap-2 rounded-full border border-amber-200/15 bg-amber-200/[0.035] px-3 py-1.5 text-[10px] text-amber-100/85"><span aria-hidden="true" className="h-1 w-1 rounded-full bg-amber-200/70" />Demo · วันที่และข้อมูลสมมติ</span>
+        <span className="inline-flex items-center gap-2 rounded-full border border-sky-200/15 bg-sky-200/5 px-3 py-1.5 text-[10px] text-sky-200">{weather.live ? "Open-Meteo · Forecast" : "Demo · วันที่และข้อมูลสมมติ"}</span>
       </div>
 
       {weather.forecast.length === 0 ? (
@@ -84,7 +84,7 @@ export default function WeatherForecast({ weather }: { weather: WeatherSnapshot 
         </motion.div>
       )}
 
-      <p className="mt-4 text-xs leading-6 text-slate-400">ตัวอย่างพยากรณ์ช่วง 13–15 พ.ย. 2569 เพื่อออกแบบหน้าเว็บ วันที่คงที่และไม่อัปเดตอัตโนมัติ · ไม่ใช่พยากรณ์จริงจาก Weather API</p>
+      <p className="mt-4 text-xs leading-6 text-slate-400">{weather.live ? "พยากรณ์จาก Open-Meteo สำหรับวันนี้และ 2 วันถัดไปตามเวลาไทย · โอกาสฝนคือค่าสูงสุดรายวัน · ไม่ใช่ข้อมูลย้อนหลังหรือประกาศเตือนภัย" : "ตัวอย่างพยากรณ์ช่วง 13–15 พ.ย. 2569 เพื่อออกแบบหน้าเว็บ วันที่คงที่และไม่อัปเดตอัตโนมัติ · ไม่ใช่พยากรณ์จริงจาก Weather API"}</p>
     </section>
   );
 }
