@@ -16,7 +16,23 @@ export interface WeatherSnapshot {
   windSpeed: number;
   condition: string;
   history: { label: string; value: number }[];
+  forecast: ForecastDay[];
 }
+
+export type WeatherCondition = "sunny" | "partly-cloudy" | "rain";
+
+export interface ForecastDay {
+  date: string;
+  high: number;
+  low: number;
+  rainChance: number;
+  condition: WeatherCondition;
+  description: string;
+}
+
+// Fixed example dates keep SSR, browser rendering, and repeat visits consistent.
+// These are sample dates, never advertised as today's live forecast.
+const mockForecastDates = ["2026-11-13", "2026-11-14", "2026-11-15"];
 
 export type WeatherMetric = "temperature" | "humidity" | "rainChance";
 
@@ -63,6 +79,16 @@ export function getMockWeather(area: WeatherArea): WeatherSnapshot & { rainChanc
     windSpeed: 5 + (seed % 16),
     rainChance,
     condition: rainChance >= 65 ? "Rain showers · ฝนบางช่วง" : "Partly cloudy · มีเมฆบางส่วน",
+    forecast: mockForecastDates.map((date, index): ForecastDay => {
+      const chance = 5 + ((seed + index * 23) % 86);
+      const high = Number((temperature + 1.8 + ((seed + index * 7) % 15) / 10).toFixed(1));
+      const low = Number((high - 5.2 - ((seed + index) % 18) / 10).toFixed(1));
+      const condition: WeatherCondition = chance >= 65 ? "rain" : chance >= 30 ? "partly-cloudy" : "sunny";
+      return {
+        date, high, low, rainChance: chance, condition,
+        description: condition === "rain" ? "ฝนบางช่วง" : condition === "partly-cloudy" ? "มีเมฆบางส่วน" : "ท้องฟ้าแจ่มใส",
+      };
+    }),
     history: days.map((label, index) => ({
       label,
       value: Number((temperature + offsets[index] + ((seed % 3) - 1) * index * 0.08).toFixed(1)),

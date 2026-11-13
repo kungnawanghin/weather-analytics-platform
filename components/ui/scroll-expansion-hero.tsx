@@ -52,9 +52,31 @@ export default function ScrollExpandMedia({
     };
   }, []);
 
+  // Deep links and native scrollbar navigation can bypass the wheel animation.
+  // Reset or reveal in the same frame so source changes cannot race the reveal.
   useEffect(() => {
-    progressRef.current = 0;
-    setScrollProgress(0);
+    const isPastHero = () => {
+      const section = sectionRef.current;
+      return Boolean(section && section.getBoundingClientRect().top <= -window.innerHeight * 0.5);
+    };
+    const revealPastHero = () => {
+      if (isPastHero() && progressRef.current < 1) {
+        progressRef.current = 1;
+        setScrollProgress(1);
+      }
+    };
+    const frame = requestAnimationFrame(() => {
+      const initialProgress = isPastHero() ? 1 : 0;
+      progressRef.current = initialProgress;
+      setScrollProgress(initialProgress);
+    });
+    window.addEventListener("scroll", revealPastHero, { passive: true });
+    window.addEventListener("resize", revealPastHero);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", revealPastHero);
+      window.removeEventListener("resize", revealPastHero);
+    };
   }, [mediaType, mediaSrc]);
 
   useEffect(() => {

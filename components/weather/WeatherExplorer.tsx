@@ -6,6 +6,7 @@ import { useWeatherBoundaries } from "../../lib/use-weather-boundaries";
 import { getMockWeather, provinceArea, type WeatherArea } from "../../lib/weather-data";
 import WeatherMap from "./WeatherMap";
 import CurrentWeather from "./CurrentWeather";
+import WeatherForecast from "./WeatherForecast";
 import WeatherAnalytics from "./WeatherAnalytics";
 
 export default function WeatherExplorer() {
@@ -33,6 +34,7 @@ export default function WeatherExplorer() {
           <a href="#weather-map" className="rounded px-2 py-1 text-xs text-sky-300 hover:text-white focus-visible:outline-2 focus-visible:outline-sky-300">กลับไปแผนที่ ↑</a>
         </div>
         <CurrentWeather weather={weather} />
+        <WeatherForecast weather={weather} />
         <WeatherAnalytics weather={weather} />
       </div>
     </>
