@@ -14,12 +14,17 @@ import {
 export interface ChartPoint {
   label: string;
   value: number;
+  date?: string;
+  tooltipLabel?: string;
 }
 
 interface AreaChartProps {
   data: ChartPoint[];
   unit?: string;
   label: string;
+  valueLabel?: string;
+  color?: string;
+  valueDomain?: [number, number];
 }
 
 interface ChartCanvasProps extends AreaChartProps {
@@ -31,6 +36,9 @@ export default function AreaChart({
   data,
   unit = "°C",
   label,
+  valueLabel = "Daily average",
+  color = "#38bdf8",
+  valueDomain,
 }: AreaChartProps) {
   if (
     data.length < 2 ||
@@ -38,7 +46,7 @@ export default function AreaChart({
   ) {
     return (
       <p className="py-20 text-center text-sm text-slate-400">
-        At least two valid data points are needed.
+        ต้องมีข้อมูลที่ถูกต้องอย่างน้อย 2 วันเพื่อแสดงกราฟ
       </p>
     );
   }
@@ -52,6 +60,9 @@ export default function AreaChart({
               data={data}
               unit={unit}
               label={label}
+              valueLabel={valueLabel}
+              color={color}
+              valueDomain={valueDomain}
               width={width}
               height={height}
             />
@@ -66,6 +77,9 @@ function ChartCanvas({
   data,
   unit = "°C",
   label,
+  valueLabel = "Daily average",
+  color = "#38bdf8",
+  valueDomain,
   width,
   height,
 }: ChartCanvasProps) {
@@ -85,8 +99,8 @@ function ChartCanvas({
 
   // เว้นพื้นที่ด้านบนสำหรับ Tooltip
   const margin = {
-    top: 76,
-    right: 16,
+    top: 96,
+    right: 24,
     bottom: 36,
     left: 44,
   };
@@ -98,34 +112,36 @@ function ChartCanvas({
   const maximum = Math.max(...values);
   const padding = Math.max((maximum - minimum) * 0.25, 1);
 
+  const hasDates = data.every((point) => point.date && Number.isFinite(Date.parse(`${point.date}T00:00:00Z`)));
+  const positions = data.map((point, index) => hasDates ? Date.parse(`${point.date}T00:00:00Z`) : index);
   const xScale = scaleLinear<number>({
-    domain: [0, data.length - 1],
+    domain: [positions[0], positions[positions.length - 1]],
     range: [margin.left, width - margin.right],
   });
 
   const yScale = scaleLinear<number>({
-    domain: [minimum - padding, maximum + padding],
+    domain: valueDomain ?? [minimum - padding, maximum + padding],
     range: [chartBottom, margin.top],
-    nice: true,
+    nice: !valueDomain,
   });
 
   const activePoint =
     activeIndex === null ? null : data[activeIndex];
 
-  const activeX = activeIndex === null ? 0 : xScale(activeIndex);
+  const activeX = activeIndex === null ? 0 : xScale(positions[activeIndex]);
   const activeY = activePoint ? yScale(activePoint.value) : 0;
 
-  const tooltipWidth = Math.min(160, width);
+  const tooltipWidth = Math.min(208, width);
   const tooltipX = Math.max(
     0,
     Math.min(width - tooltipWidth, activeX - tooltipWidth / 2),
   );
 
   // ลดจำนวนชื่อบนแกนนอนเมื่อหน้าจอแคบ
-  const labelStep = Math.max(
-    1,
-    Math.ceil(data.length / Math.max(2, Math.floor(width / 55))),
-  );
+  const tickCount = Math.min(8, data.length, Math.max(2, Math.floor((width - margin.left - margin.right) / 72)));
+  const labelIndices = new Set(Array.from({ length: tickCount }, (_, index) =>
+    Math.round((index * (data.length - 1)) / (tickCount - 1)),
+  ));
 
   function selectPoint(clientX: number, element: SVGSVGElement) {
     const bounds = element.getBoundingClientRect();
@@ -133,20 +149,21 @@ function ChartCanvas({
     if (bounds.width === 0) return;
 
     const pointerX = ((clientX - bounds.left) / bounds.width) * width;
-    const nearestIndex = Math.round(xScale.invert(pointerX));
-
-    setActiveIndex(
-      Math.max(0, Math.min(data.length - 1, nearestIndex)),
-    );
+    const nearestIndex = positions.reduce((nearest, position, index) =>
+      Math.abs(xScale(position) - pointerX) < Math.abs(xScale(positions[nearest]) - pointerX) ? index : nearest,
+    0);
+    setActiveIndex(nearestIndex);
   }
 
   return (
     <div className="relative h-full w-full">
+      <p id={`${gradientId}-instructions`} className="sr-only">ใช้ปุ่มลูกศรซ้ายหรือขวาเพื่อเลือกวัน และ Escape เพื่อปิดรายละเอียด</p>
       <svg
         width={width}
         height={height}
         role="img"
         aria-label={label}
+        aria-describedby={`${gradientId}-instructions`}
         tabIndex={0}
         className="block rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-300"
         onPointerMove={(event) => {
@@ -187,17 +204,18 @@ function ChartCanvas({
           >
             <stop
               offset="0%"
-              stopColor="#38bdf8"
+              stopColor={color}
               stopOpacity={0.35}
             />
 
             <stop
               offset="100%"
-              stopColor="#38bdf8"
+              stopColor={color}
               stopOpacity={0.01}
             />
           </linearGradient>
         </defs>
+        <text x={margin.left} y={20} fill="#94a3b8" fontSize={11} aria-hidden="true">{unit}</text>
 
         {/* เส้นตารางและค่าบนแกนตั้ง */}
         {yScale.ticks(4).map((tick) => (
@@ -228,7 +246,7 @@ function ChartCanvas({
         {/* พื้นที่ไล่สีใต้เส้นกราฟ */}
         <AreaClosed<ChartPoint>
           data={data}
-          x={(_, index) => xScale(index)}
+          x={(_, index) => xScale(positions[index])}
           y={(point) => yScale(point.value)}
           yScale={yScale}
           curve={curveMonotoneX}
@@ -238,27 +256,26 @@ function ChartCanvas({
         {/* เส้นกราฟ */}
         <LinePath<ChartPoint>
           data={data}
-          x={(_, index) => xScale(index)}
+          x={(_, index) => xScale(positions[index])}
           y={(point) => yScale(point.value)}
           curve={curveMonotoneX}
-          stroke="#38bdf8"
+          stroke={color}
           strokeWidth={3}
           strokeLinecap="round"
         />
 
         {/* ชื่อวันบนแกนนอน */}
         {data.map((point, index) => {
-          const showLabel =
-            index % labelStep === 0 || index === data.length - 1;
+          const showLabel = labelIndices.has(index);
 
           if (!showLabel) return null;
 
           return (
             <text
               key={`${point.label}-${index}`}
-              x={xScale(index)}
+              x={xScale(positions[index])}
               y={height - 10}
-              textAnchor="middle"
+              textAnchor={index === 0 ? "start" : index === data.length - 1 ? "end" : "middle"}
               fill="#94a3b8"
               fontSize={11}
             >
@@ -289,7 +306,7 @@ function ChartCanvas({
                 x2={0}
                 y1={margin.top}
                 y2={chartBottom}
-                stroke="#7dd3fc"
+                stroke={color}
                 strokeOpacity={0.6}
                 strokeDasharray="4 5"
               />
@@ -298,7 +315,7 @@ function ChartCanvas({
               <motion.circle
                 cx={0}
                 r={16}
-                fill="#38bdf8"
+                fill={color}
                 fillOpacity={0.12}
                 initial={{ cy: activeY }}
                 animate={{ cy: activeY }}
@@ -309,7 +326,7 @@ function ChartCanvas({
               <motion.circle
                 cx={0}
                 r={9}
-                fill="#38bdf8"
+                fill={color}
                 fillOpacity={0.18}
                 initial={{ cy: activeY }}
                 animate={{ cy: activeY }}
@@ -321,7 +338,7 @@ function ChartCanvas({
                 cx={0}
                 r={5}
                 fill="#0f172a"
-                stroke="#bae6fd"
+                stroke={color}
                 strokeWidth={3}
                 initial={{ cy: activeY }}
                 animate={{ cy: activeY }}
@@ -352,8 +369,9 @@ function ChartCanvas({
             transition={smoothTransition}
           >
             <p className="text-xs text-slate-400">
-              {activePoint.label} · Daily average
+              {activePoint.tooltipLabel ?? activePoint.label}
             </p>
+            <p className="mt-1 text-[11px] text-slate-400">{valueLabel}</p>
 
             <p className="mt-1 text-xl font-semibold text-sky-200">
               {activePoint.value.toFixed(1)}

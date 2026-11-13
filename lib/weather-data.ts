@@ -15,8 +15,14 @@ export interface WeatherSnapshot {
   humidity: number;
   windSpeed: number;
   condition: string;
-  history: { label: string; value: number }[];
+  history: WeatherHistoryDay[];
   forecast: ForecastDay[];
+}
+
+export interface WeatherHistoryDay {
+  date: string;
+  temperature: number;
+  humidity: number;
 }
 
 export type WeatherCondition = "sunny" | "partly-cloudy" | "rain";
@@ -33,6 +39,9 @@ export interface ForecastDay {
 // Fixed example dates keep SSR, browser rendering, and repeat visits consistent.
 // These are sample dates, never advertised as today's live forecast.
 const mockForecastDates = ["2026-11-13", "2026-11-14", "2026-11-15"];
+const mockHistoryDates = Array.from({ length: 30 }, (_, index) =>
+  new Date(Date.UTC(2026, 9, 14 + index)).toISOString().slice(0, 10),
+);
 
 export type WeatherMetric = "temperature" | "humidity" | "rainChance";
 
@@ -66,8 +75,6 @@ export function provinceArea(id: string): WeatherArea {
 export function getMockWeather(area: WeatherArea): WeatherSnapshot & { rainChance: number } {
   const seed = areaSeed(area.id);
   const temperature = Number((28.5 + (seed % 65) / 10).toFixed(1));
-  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const offsets = [-1.4, 0.5, -0.3, 1.6, 0.8, -0.7, -1.1];
   const rainChance = 10 + (seed % 81);
   return {
     location: area.level === "province" ? area.name : `${area.name} · ${area.provinceName}`,
@@ -89,10 +96,19 @@ export function getMockWeather(area: WeatherArea): WeatherSnapshot & { rainChanc
         description: condition === "rain" ? "ฝนบางช่วง" : condition === "partly-cloudy" ? "มีเมฆบางส่วน" : "ท้องฟ้าแจ่มใส",
       };
     }),
-    history: days.map((label, index) => ({
-      label,
-      value: Number((temperature + offsets[index] + ((seed % 3) - 1) * index * 0.08).toFixed(1)),
-    })),
+    // A single dated series backs both ranges and both metrics.
+    // The seven-day view always slices the same thirty-day fixture.
+    history: mockHistoryDates.map((date, index) => {
+      const phase = (seed % 19) / 3;
+      const variation = Math.sin(index / 3 + phase) * 1.6 + Math.cos(index / 5 + phase) * 0.7 + index * 0.02;
+      return {
+        date,
+        temperature: Number((temperature + variation).toFixed(1)),
+        humidity: Number(Math.min(100, Math.max(0,
+          52 + (seed % 37) + Math.cos(index / 4 + phase) * 6 - variation * 1.8,
+        )).toFixed(1)),
+      };
+    }),
   };
 }
 

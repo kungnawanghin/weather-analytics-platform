@@ -1,107 +1,168 @@
+"use client";
+
+import { useState } from "react";
 import AreaChart from "../ui/area-chart";
+import WeatherInsights from "./WeatherInsights";
 import type { WeatherSnapshot } from "../../lib/weather-data";
+import {
+  analyticsMetrics,
+  summarizeHistory,
+  type AnalyticsMetric,
+  type AnalyticsRange,
+} from "../../lib/weather-analytics";
+
+const shortDate = new Intl.DateTimeFormat("th-TH", {
+  day: "numeric", month: "short", timeZone: "Asia/Bangkok",
+});
+const fullDate = new Intl.DateTimeFormat("th-TH", {
+  day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Bangkok",
+});
+function formatDate(date: string, full = false) {
+  return (full ? fullDate : shortDate).format(new Date(`${date}T12:00:00+07:00`));
+}
 
 export default function WeatherAnalytics({ weather }: { weather: WeatherSnapshot }) {
-  const mockHistory = weather.history;
-  if (mockHistory.length === 0) {
-    return <section className="mt-12 rounded-2xl border border-white/10 p-8"><h2 className="text-xl">Weather Analytics</h2><p className="mt-3 text-slate-400">ยังไม่มีข้อมูลย้อนหลังสำหรับ {weather.location}</p></section>;
-  }
-  const values = mockHistory.map((point) => point.value);
-  const average =
-    values.reduce((sum, value) => sum + value, 0) / values.length;
-
+  const [metric, setMetric] = useState<AnalyticsMetric>("temperature");
+  const [range, setRange] = useState<AnalyticsRange>(7);
+  const config = analyticsMetrics[metric];
+  const summary = summarizeHistory(weather.history, metric, range);
+  const chartData = summary.points.map((point) => ({
+    ...point,
+    label: formatDate(point.date),
+    tooltipLabel: formatDate(point.date, true),
+  }));
+  const period = summary.startDate && summary.endDate
+    ? `${formatDate(summary.startDate, true)} – ${formatDate(summary.endDate, true)}`
+    : "ยังไม่มีช่วงข้อมูล";
   const statistics = [
-    { label: "Weekly average", value: average },
-    { label: "Highest daily average", value: Math.max(...values) },
-    { label: "Lowest daily average", value: Math.min(...values) },
+    { label: "ค่าเฉลี่ยช่วงที่เลือก", value: summary.average },
+    { label: "ค่าเฉลี่ยรายวันสูงสุด", value: summary.maximum },
+    { label: "ค่าเฉลี่ยรายวันต่ำสุด", value: summary.minimum },
   ];
 
   return (
     <section
+      id="weather-analytics"
       aria-labelledby="analytics-title"
-      className="mt-20 border-t border-white/10 pt-12"
+      className="mt-20 scroll-mt-8 border-t border-white/10 pt-12"
     >
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-sky-300">
-            Beyond the numbers
-          </p>
-
-          <h2
-            id="analytics-title"
-            className="mt-3 text-2xl font-semibold sm:text-3xl"
-          >
-            Weather Analytics
-          </h2>
-
-          <p className="mt-3 text-sm text-slate-400">
-            Temperature patterns · {weather.location}
-          </p>
+          <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-sky-300">Beyond the numbers</p>
+          <h2 id="analytics-title" className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">Weather Analytics</h2>
+          <p className="mt-3 text-sm text-slate-400">{config.patterns} · {weather.location}</p>
         </div>
-
-        <span className="rounded-full border border-amber-300/20 bg-amber-300/10 px-3 py-1 text-xs text-amber-200">
-          Demo · Mock data
-        </span>
+        <span className="rounded-full border border-amber-200/15 bg-amber-200/5 px-3 py-1.5 text-[11px] text-amber-200">Demo · Mock data</span>
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-3">
-        {statistics.map((statistic) => (
-          <article
-            key={statistic.label}
-            className="rounded-2xl border border-white/10 bg-slate-900 p-5"
-          >
-            <h3 className="text-sm text-slate-400">
-              {statistic.label}
-            </h3>
+      <div className="mt-7 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-sky-200/10 bg-[#0b1929] p-3">
+        <div role="group" aria-label="ข้อมูลที่วิเคราะห์" className="flex flex-wrap gap-1">
+          {(Object.keys(analyticsMetrics) as AnalyticsMetric[]).map((key) => (
+            <button
+              key={key} type="button" aria-pressed={metric === key}
+              onClick={() => setMetric(key)}
+              className={`min-h-10 rounded-xl px-4 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300 ${metric === key ? "bg-sky-200/15 text-sky-100" : "text-slate-400 hover:bg-white/5 hover:text-white"}`}
+            >
+              {analyticsMetrics[key].name}
+            </button>
+          ))}
+        </div>
+        <div role="group" aria-label="ช่วงข้อมูลย้อนหลัง" className="flex gap-1 rounded-xl border border-white/10 bg-black/15 p-1">
+          {([7, 30] as const).map((days) => (
+            <button
+              key={days} type="button" aria-pressed={range === days}
+              onClick={() => setRange(days)}
+              className={`min-h-9 rounded-lg px-4 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300 ${range === days ? "bg-sky-200 text-slate-950" : "text-slate-400 hover:text-white"}`}
+            >
+              {days} วัน
+            </button>
+          ))}
+        </div>
+      </div>
 
-            <p className="mt-3 text-3xl font-semibold">
-              {statistic.value.toFixed(1)}
-              <span className="ml-1 text-lg text-sky-200">°C</span>
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-xs leading-6 text-slate-400">
+        <p>ช่วงวันที่ตัวอย่าง · {period}</p>
+        <p role="status" aria-atomic="true">{config.name} · {range} วัน · ข้อมูล {summary.count}/{range} วัน</p>
+      </div>
+
+      {summary.count > 0 && summary.count < range && (
+        <p role="status" className="mt-3 rounded-xl border border-amber-200/15 bg-amber-200/5 px-4 py-3 text-xs leading-6 text-amber-200">
+          ข้อมูลยังไม่ครบช่วงที่เลือก สถิติคำนวณจาก {summary.count} วันที่มีข้อมูล ไม่เติมวันที่ขาดด้วยศูนย์
+        </p>
+      )}
+
+      <div className="mt-6 grid gap-4 sm:grid-cols-3">
+        {statistics.map((statistic) => (
+          <article key={statistic.label} className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#122438] to-[#0d192a] p-5">
+            <h3 className="text-xs leading-6 text-slate-400">{statistic.label}</h3>
+            <p className="mt-3 text-3xl font-medium tabular-nums text-slate-100">
+              {statistic.value === null ? "—" : statistic.value.toFixed(1)}
+              <span className="ml-1.5 text-lg text-sky-200">{config.unit}</span>
             </p>
           </article>
         ))}
       </div>
 
-      <div className="mt-6 rounded-2xl border border-white/10 bg-slate-900 p-4 sm:p-6">
-        <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
+      <div className="mt-6 overflow-hidden rounded-[22px] border border-sky-200/10 bg-[#0d1b2c] p-4 sm:p-6">
+        <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h3 className="font-medium">Temperature overview</h3>
-            <p className="mt-2 text-xs text-slate-400">
-              Daily average temperature · °C
+            <h3 className="font-medium text-slate-100">{config.title}</h3>
+            <p className="mt-2 flex items-center gap-2 text-xs leading-6 text-slate-400">
+              <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full" style={{ background: config.color }} />
+              {config.dailyLabel} · {config.unit}
             </p>
           </div>
-
-          <span className="rounded-lg bg-sky-400/10 px-3 py-1 text-xs text-sky-300">
-            Sample week · 7 days
-          </span>
+          <span className="rounded-lg bg-sky-400/10 px-3 py-1.5 text-[11px] text-sky-200">{range} วัน · {summary.count} จุดข้อมูล</span>
         </div>
 
-        <AreaChart
-          key={weather.location}
-          data={mockHistory}
-          unit="°C"
-          label={`Sample daily average temperatures for ${weather.location}`}
-        />
+        {summary.count === 0 ? (
+          <p role="status" className="py-20 text-center text-sm leading-7 text-slate-400">ยังไม่มีข้อมูล{config.name}ในช่วงนี้สำหรับ {weather.location}</p>
+        ) : (
+          <AreaChart
+            key={`${weather.location}-${metric}-${range}`}
+            data={chartData}
+            unit={config.unit}
+            color={config.color}
+            valueLabel={config.dailyLabel}
+            valueDomain={metric === "humidity" ? [0, 100] : undefined}
+            label={`${config.dailyLabel} ${range} วัน · ${weather.location}`}
+          />
+        )}
 
-        <details className="mt-5 text-xs text-slate-400">
-          <summary className="cursor-pointer hover:text-sky-200">
-            View sample data
-          </summary>
+        <p className="mt-3 text-[11px] leading-6 text-slate-400">
+          {metric === "humidity" ? "แกนตั้งแสดงความชื้นสัมพัทธ์ 0–100%" : "แกนตั้งปรับตามช่วงอุณหภูมิของข้อมูล"}
+          {" · "}ชี้หรือแตะกราฟเพื่อดูค่า หรือใช้ปุ่มลูกศรเมื่อเลือกกราฟด้วยคีย์บอร์ด
+        </p>
 
-          <ul className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-            {mockHistory.map((point) => (
-              <li key={point.label}>
-                {point.label}: {point.value.toFixed(1)}°C
-              </li>
-            ))}
-          </ul>
-        </details>
+        {summary.count > 0 && (
+          <details className="mt-5 border-t border-white/[0.07] pt-4 text-xs text-slate-400">
+            <summary className="w-fit cursor-pointer rounded py-1 hover:text-sky-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300">ดูข้อมูลตัวอย่าง · {summary.count} วัน</summary>
+            <div className="mt-3 max-h-64 overflow-auto rounded-xl border border-white/10">
+              <table className="w-full text-left text-xs">
+                <caption className="sr-only">{config.dailyLabel} ของ {weather.location} ช่วง {period}</caption>
+                <thead className="sticky top-0 bg-[#14263a] text-slate-300">
+                  <tr><th scope="col" className="px-4 py-3 font-medium">วันที่</th><th scope="col" className="px-4 py-3 text-right font-medium">{config.name} ({config.unit})</th></tr>
+                </thead>
+                <tbody>
+                  {summary.points.map((point) => (
+                    <tr key={point.date} className="border-t border-white/5">
+                      <td className="px-4 py-3"><time dateTime={point.date}>{formatDate(point.date, true)}</time></td>
+                      <td className="px-4 py-3 text-right tabular-nums text-slate-200">{point.value.toFixed(1)}{config.unit}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </details>
+        )}
       </div>
 
-      <p className="mt-4 text-xs leading-relaxed text-slate-500">
-        Demonstration data only. Highest and lowest values refer to
-        daily averages. The vertical axis adjusts to the data range.
+      <p className="mt-4 text-xs leading-6 text-slate-400">
+        ข้อมูลสมมติช่วง 14 ต.ค.–12 พ.ย. 2569 ไม่ใช่ข้อมูลอากาศย้อนหลังจริง · ช่วง 7 วันใช้ข้อมูล 7 วันท้ายของชุด 30 วัน
+        <br />
+        ค่าสูงสุด–ต่ำสุดหมายถึงค่าเฉลี่ยรายวันที่สูงสุด–ต่ำสุด ไม่ใช่ค่าสูงสุด–ต่ำสุดรายชั่วโมง · ทุกวันมีน้ำหนักเท่ากันในการหาค่าเฉลี่ย
       </p>
+      <WeatherInsights history={weather.history} location={weather.location} metric={metric} range={range} />
     </section>
   );
 }
