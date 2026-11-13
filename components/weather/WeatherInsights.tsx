@@ -65,7 +65,7 @@ export default function WeatherInsights({ history, location, metric, range }: We
           <h3 id="insights-title" className="mt-3 text-2xl font-semibold tracking-tight text-slate-100">Weather Insights</h3>
           <p className="mt-3 text-sm leading-6 text-slate-400">{location} · ช่วง {range} วันที่เลือก</p>
         </div>
-        <span className="rounded-full border border-sky-200/15 bg-sky-200/5 px-3 py-1.5 text-[10px] text-sky-200">Calculated · Mock data</span>
+        <span className="rounded-full border border-sky-200/15 bg-sky-200/5 px-3 py-1.5 text-[10px] text-sky-200">Calculated · ERA5</span>
       </div>
 
       <p className="mt-4 text-xs leading-6 text-slate-400">
@@ -126,7 +126,7 @@ export default function WeatherInsights({ history, location, metric, range }: We
         </article>
       </div>
 
-      <p className="mt-4 text-xs leading-6 text-slate-400">เป็นการสรุปข้อมูลสมมติในช่วงที่เลือก ไม่ใช่พยากรณ์หรือข้อสรุปแนวโน้มระยะยาว · ปัดค่าที่แสดงเป็นทศนิยม 1 ตำแหน่ง{metric === "humidity" ? " · ผลต่างความชื้นใช้จุดเปอร์เซ็นต์ เช่น 60% → 65% เท่ากับ +5 จุดเปอร์เซ็นต์" : ""}</p>
+      <p className="mt-4 text-xs leading-6 text-slate-400">เป็นการสรุปข้อมูลวิเคราะห์ย้อนหลัง ERA5 ในช่วงที่เลือก ไม่ใช่พยากรณ์หรือข้อสรุปแนวโน้มระยะยาว · ปัดค่าที่แสดงเป็นทศนิยม 1 ตำแหน่ง{metric === "humidity" ? " · ผลต่างความชื้นใช้จุดเปอร์เซ็นต์ เช่น 60% → 65% เท่ากับ +5 จุดเปอร์เซ็นต์" : ""}</p>
     </section>
   );
 }

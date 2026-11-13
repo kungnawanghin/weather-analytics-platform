@@ -7,7 +7,8 @@ interface MapRegionProps {
   area: WeatherArea;
   path: string;
   color: string;
-  value: number;
+  value: number | null;
+  unavailableLabel: string;
   unit: string;
   selected: boolean;
   hovered: boolean;
@@ -22,7 +23,7 @@ interface MapRegionProps {
 }
 
 export default function MapRegion({
-  area, path, color, value, unit, selected, hovered, interactive,
+  area, path, color, value, unit, unavailableLabel, selected, hovered, interactive,
   focused, lift, scale, reducedMotion, onSelect, onHover, onKeyboardSelect,
 }: MapRegionProps) {
   return (
@@ -31,7 +32,7 @@ export default function MapRegion({
       tabIndex={interactive ? 0 : -1}
       aria-hidden={!interactive || undefined}
       aria-pressed={interactive && area.level === "district" ? selected : undefined}
-      aria-label={`${area.name} ${value}${unit} ข้อมูลสมมติ${area.level === "province" ? " กดดูเขตหรืออำเภอ" : ""}`}
+      aria-label={`${area.name} ${value === null ? unavailableLabel : `${value}${unit} Open-Meteo`}${area.level === "province" ? " กดดูเขตหรืออำเภอ" : ""}`}
       pointerEvents={interactive ? "auto" : "none"}
       onClick={() => interactive && onSelect(area)}
       onPointerEnter={() => interactive && onHover(area)}

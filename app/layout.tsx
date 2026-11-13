@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "BEYOND THE FORECAST | Bangkok Weather Atlas",
-  description: "Explore weather patterns across Bangkok and its metropolitan area with interactive maps and analytics. Demonstration data.",
+  description: "Explore Bangkok metropolitan weather with interactive maps, forecasts and historical ERA5 weather analytics powered by Open-Meteo.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

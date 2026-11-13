@@ -6,19 +6,23 @@ import type { FeatureCollection } from "geojson";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { provinceConfigs } from "../../lib/map-config";
 import type { BoundaryResource, MapBoundary } from "../../lib/use-weather-boundaries";
-import { getMockWeather, metricColor, metricConfigs, type WeatherArea, type WeatherMetric } from "../../lib/weather-data";
+import { metricColor, metricConfigs, type WeatherArea, type WeatherMetric } from "../../lib/weather-data";
 import { mapPerspective, perspectiveTransform, projectMapPoint } from "../../lib/map-perspective";
 import MapRegion from "./MapRegion";
+import type { AreaWeatherStates } from "../../lib/use-area-weather";
+import { mapWeatherValue, mapWeatherLabel } from "../../lib/map-weather";
 
 interface WeatherMapProps {
   resource: BoundaryResource;
+  weatherStates: AreaWeatherStates;
+  onRetryWeather: () => void;
   selected: WeatherArea | null;
   onSelect: (area: WeatherArea | null) => void;
   onExplore: () => void;
   onRetry: () => void;
 }
 
-export default function WeatherMap({ resource, selected, onSelect, onExplore, onRetry }: WeatherMapProps) {
+export default function WeatherMap({ resource, weatherStates, onRetryWeather, selected, onSelect, onExplore, onRetry }: WeatherMapProps) {
   const [metric, setMetric] = useState<WeatherMetric>("temperature");
   const [hovered, setHovered] = useState<WeatherArea | null>(null);
   const [query, setQuery] = useState("");
@@ -101,7 +105,12 @@ export default function WeatherMap({ resource, selected, onSelect, onExplore, on
   const visibleAreas = focusedProvinceId ? districts : geometry?.provinces ?? [];
   const matchingAreas = visibleAreas.filter((item) => `${item.area.name} ${item.feature.properties.shapeName}`.toLowerCase().includes(query.toLowerCase().trim()));
   const readout = hovered ?? selected;
-  const readoutWeather = readout ? getMockWeather(readout) : null;
+  const readoutState = readout ? weatherStates[readout.id] : undefined;
+  const readoutWeather = readoutState?.status === "ready" ? readoutState.weather : null;
+  const loaded = visibleAreas.filter(item => weatherStates[item.area.id]?.status === "ready").length;
+  const failed = visibleAreas.filter(item => weatherStates[item.area.id]?.status === "error").length;
+  const missingColor = "#314353";
+  const formatTime = (time: string) => new Intl.DateTimeFormat("th-TH", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Bangkok" }).format(new Date(time));
   const config = metricConfigs[metric];
 
   return (
@@ -112,7 +121,7 @@ export default function WeatherMap({ resource, selected, onSelect, onExplore, on
           <h2 id="weather-map-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Every area. A different story.</h2>
           <p className="mt-3 text-sm leading-6 text-slate-400">สำรวจอากาศกรุงเทพฯ และปริมณฑล · เลือกจังหวัด แล้วเจาะลึกถึงเขต/อำเภอ</p>
         </div>
-        <span className="inline-flex items-center gap-2 rounded-full border border-amber-200/15 bg-amber-200/5 px-3 py-2 text-[11px] text-amber-200"><span className="h-1.5 w-1.5 rounded-full bg-amber-200" />DEMO · ไม่ใช่ข้อมูลอากาศจริง</span>
+        <span className="inline-flex items-center gap-2 rounded-full border border-amber-200/15 bg-sky-200/5 px-3 py-2 text-[11px] text-sky-200"><span className="h-1.5 w-1.5 rounded-full bg-amber-200" />Open-Meteo · Model data</span>
       </div>
 
       <div className="overflow-hidden rounded-[28px] border border-sky-200/15 bg-[#0a1827] shadow-[0_32px_100px_-60px_#000]">
@@ -167,15 +176,15 @@ export default function WeatherMap({ resource, selected, onSelect, onExplore, on
                 ))}
               </g>
               {geometry.provinces.map((item) => {
-                const value = getMockWeather(item.area)[metric];
-                return <MapRegion key={item.area.id} area={item.area} path={item.d} color={metricColor(value, metric)} value={value} unit={config.unit} selected={false} hovered={hovered?.id === item.area.id} interactive={!focusedProvinceId} focused={false} lift={isTilted && hovered?.id === item.area.id ? 10 : 0} scale={camera.scale} reducedMotion={Boolean(reduceMotion)} onSelect={selectArea} onHover={setHovered} onKeyboardSelect={(area) => { selectArea(area); requestAnimationFrame(() => searchRef.current?.focus({ preventScroll: true })); }} />;
+                const value = mapWeatherValue(weatherStates[item.area.id], metric);
+                return <MapRegion key={item.area.id} area={item.area} path={item.d} color={value === null ? missingColor : metricColor(value, metric)} value={value} unavailableLabel={mapWeatherLabel(weatherStates[item.area.id], metric, config.unit)} unit={config.unit} selected={false} hovered={hovered?.id === item.area.id} interactive={!focusedProvinceId} focused={false} lift={isTilted && hovered?.id === item.area.id ? 10 : 0} scale={camera.scale} reducedMotion={Boolean(reduceMotion)} onSelect={selectArea} onHover={setHovered} onKeyboardSelect={(area) => { selectArea(area); requestAnimationFrame(() => searchRef.current?.focus({ preventScroll: true })); }} />;
               })}
               <AnimatePresence mode="wait">
                 {focusedProvinceId && <motion.g key={focusedProvinceId} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduceMotion ? 0 : 0.25 }}>
                   {districts.map((item) => {
-                    const value = getMockWeather(item.area)[metric];
+                    const value = mapWeatherValue(weatherStates[item.area.id], metric);
                     const active = selected?.id === item.area.id;
-                    return <MapRegion key={item.area.id} area={item.area} path={item.d} color={metricColor(value, metric)} value={value} unit={config.unit} selected={active} hovered={hovered?.id === item.area.id} interactive focused lift={isTilted ? hovered?.id === item.area.id ? 4 : active ? 2 : 0 : 0} scale={camera.scale} reducedMotion={Boolean(reduceMotion)} onSelect={selectArea} onHover={setHovered} onKeyboardSelect={selectArea} />;
+                    return <MapRegion key={item.area.id} area={item.area} path={item.d} color={value === null ? missingColor : metricColor(value, metric)} value={value} unavailableLabel={mapWeatherLabel(weatherStates[item.area.id], metric, config.unit)} unit={config.unit} selected={active} hovered={hovered?.id === item.area.id} interactive focused lift={isTilted ? hovered?.id === item.area.id ? 4 : active ? 2 : 0 : 0} scale={camera.scale} reducedMotion={Boolean(reduceMotion)} onSelect={selectArea} onHover={setHovered} onKeyboardSelect={selectArea} />;
                   })}
                 </motion.g>}
               </AnimatePresence>
@@ -190,13 +199,13 @@ export default function WeatherMap({ resource, selected, onSelect, onExplore, on
 
             <AnimatePresence mode="wait">
               <motion.g key={`${viewMode}-${focusedProvinceId ?? "overview"}-${Math.round(width)}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduceMotion ? 0 : 0.2, delay: reduceMotion ? 0 : 0.4 }} pointerEvents="none" aria-hidden="true">
-                {labels.map(({ area, x, y }) => <motion.g key={area.id} initial={false} animate={{ x, y }} transition={transition}><text x={0} y={0} textAnchor="middle" dominantBaseline="middle" fontSize={width < 600 ? 11 : 12} fontWeight={600} fill="#f0f9ff" stroke="#0a1929" strokeWidth={3} strokeLinejoin="round" paintOrder="stroke"><tspan x={0}>{area.name}</tspan>{!focusedProvinceId && <tspan x={0} dy={21} fontSize={17}>{getMockWeather(area)[metric]}{config.unit}</tspan>}</text></motion.g>)}
+                {labels.map(({ area, x, y }) => <motion.g key={area.id} initial={false} animate={{ x, y }} transition={transition}><text x={0} y={0} textAnchor="middle" dominantBaseline="middle" fontSize={width < 600 ? 11 : 12} fontWeight={600} fill="#f0f9ff" stroke="#0a1929" strokeWidth={3} strokeLinejoin="round" paintOrder="stroke"><tspan x={0}>{area.name}</tspan>{!focusedProvinceId && <tspan x={0} dy={21} fontSize={17}>{mapWeatherLabel(weatherStates[area.id], metric, config.unit)}</tspan>}</text></motion.g>)}
               </motion.g>
             </AnimatePresence>
           </svg>}
 
           <AnimatePresence>
-            {readout && readoutWeather && <motion.div key={readout.id} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: reduceMotion ? 0 : 0.15 }} className="pointer-events-none absolute bottom-4 left-4 z-10 max-w-[calc(100%-2rem)] rounded-xl border border-sky-200/15 bg-[#07111f]/95 px-4 py-3 shadow-xl backdrop-blur-md sm:bottom-5 sm:left-7"><p className="text-xs text-slate-400">{readout.level === "district" ? readout.provinceName : "จุดอ้างอิงจังหวัด"} · ข้อมูลสมมติ</p><p className="mt-1 text-sm font-medium text-white">{readout.name}<span className="ml-4 text-sky-200">{readoutWeather[metric]}{config.unit}</span></p></motion.div>}
+            {readout && <motion.div key={readout.id} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: reduceMotion ? 0 : 0.15 }} className="pointer-events-none absolute bottom-4 left-4 z-10 max-w-[calc(100%-2rem)] rounded-xl border border-sky-200/15 bg-[#07111f]/95 px-4 py-3 shadow-xl backdrop-blur-md sm:bottom-5 sm:left-7"><p className="text-xs text-slate-400">{readout.level === "district" ? readout.provinceName : "จุดอ้างอิงจังหวัด"} · Open-Meteo</p><p className="mt-1 text-sm font-medium text-white">{readout.name}<span className="ml-4 text-sky-200">{mapWeatherLabel(readoutState, metric, config.unit)}</span></p>{readoutWeather?.live && <p className="mt-2 text-[10px] leading-5 text-slate-400">เวลาข้อมูล {formatTime(readoutWeather.live.validAt)} (ไทย){metric === "rainChance" ? " · โอกาสฝนสูงสุดวันนี้" : ""}</p>}</motion.div>}
           </AnimatePresence>
         </div>
 
@@ -216,7 +225,9 @@ export default function WeatherMap({ resource, selected, onSelect, onExplore, on
         </div>
       </div>
 
-      <div className="mt-4 flex flex-wrap justify-between gap-2 text-[10px] leading-5 text-slate-500"><p>สีแทนค่าของจุดอ้างอิงสมมติ ไม่ใช่ข้อมูลทั่วทั้งพื้นที่หรือระดับเตือนภัย · เส้นขอบลดรายละเอียด · ความสูงในโหมด 2.5D เป็นเอฟเฟกต์เท่านั้น</p><p><a href="https://www.geoboundaries.org/" target="_blank" rel="noreferrer" className="underline hover:text-sky-200">geoBoundaries</a> · จังหวัด 2017: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer" className="underline hover:text-sky-200">© OSM / ODbL</a> · เขต/อำเภอ 2019: <a href="https://data.humdata.org/dataset/thailand-administrative-boundaries" target="_blank" rel="noreferrer" className="underline hover:text-sky-200">RTSD / OCHA · CC BY 3.0 IGO</a></p></div>
+      {geometry && <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400"><p role="status" aria-live="polite">ข้อมูลแผนที่ {loaded}/{visibleAreas.length} พื้นที่ · {failed ? `โหลดไม่สำเร็จ ${failed} พื้นที่` : loaded < visibleAreas.length ? "กำลังโหลด…" : "โหลดครบแล้ว"}</p>{failed > 0 && <button type="button" onClick={onRetryWeather} className="rounded-lg border border-white/20 px-3 py-2 text-sky-200">ลองโหลดข้อมูลอากาศอีกครั้ง</button>}</div>}
+      <p className="mt-3 text-xs leading-6 text-slate-400"><span className="mr-2 inline-block h-2 w-4 rounded bg-[#314353]" />สีเทา = กำลังโหลดหรือไม่มีข้อมูล · โอกาสฝน = ค่าสูงสุดของพยากรณ์วันนี้ (เวลาไทย) · ไม่อัปเดตอัตโนมัติระหว่างเปิดหน้า</p>
+      <div className="mt-4 flex flex-wrap justify-between gap-2 text-[10px] leading-5 text-slate-500"><p>สีแทนค่าจากแบบจำลอง ณ จุดอ้างอิง ไม่ใช่ค่าเฉลี่ยทั้งพื้นที่หรือระดับเตือนภัย · เส้นขอบลดรายละเอียด · ความสูงในโหมด 2.5D เป็นเอฟเฟกต์เท่านั้น</p><p>Weather: <a href="https://open-meteo.com/" target="_blank" rel="noreferrer" className="underline hover:text-sky-200">Open-Meteo</a> / <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer" className="underline">CC BY 4.0</a> · แปลงข้อมูลเป็นสี · <a href="https://www.geoboundaries.org/" target="_blank" rel="noreferrer" className="underline hover:text-sky-200">geoBoundaries</a> · จังหวัด 2017: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer" className="underline hover:text-sky-200">© OSM / ODbL</a> · เขต/อำเภอ 2019: <a href="https://data.humdata.org/dataset/thailand-administrative-boundaries" target="_blank" rel="noreferrer" className="underline hover:text-sky-200">RTSD / OCHA · CC BY 3.0 IGO</a></p></div>
     </section>
   );
 }

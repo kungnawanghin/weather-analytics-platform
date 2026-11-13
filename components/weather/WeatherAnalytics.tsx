@@ -3,7 +3,7 @@
 import { useState } from "react";
 import AreaChart from "../ui/area-chart";
 import WeatherInsights from "./WeatherInsights";
-import type { WeatherSnapshot } from "../../lib/weather-data";
+import type { WeatherHistory } from "../../lib/weather-history";
 import {
   analyticsMetrics,
   summarizeHistory,
@@ -21,7 +21,7 @@ function formatDate(date: string, full = false) {
   return (full ? fullDate : shortDate).format(new Date(`${date}T12:00:00+07:00`));
 }
 
-export default function WeatherAnalytics({ weather }: { weather: WeatherSnapshot }) {
+export default function WeatherAnalytics({ weather }: { weather: WeatherHistory }) {
   const [metric, setMetric] = useState<AnalyticsMetric>("temperature");
   const [range, setRange] = useState<AnalyticsRange>(7);
   const config = analyticsMetrics[metric];
@@ -52,7 +52,7 @@ export default function WeatherAnalytics({ weather }: { weather: WeatherSnapshot
           <h2 id="analytics-title" className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">Weather Analytics</h2>
           <p className="mt-3 text-sm text-slate-400">{config.patterns} · {weather.location}</p>
         </div>
-        <span className="rounded-full border border-amber-200/15 bg-amber-200/5 px-3 py-1.5 text-[11px] text-amber-200">Demo · Mock data</span>
+        <span className="rounded-full border border-amber-200/15 bg-amber-200/5 px-3 py-1.5 text-[11px] text-amber-200">Open-Meteo · ERA5 Reanalysis</span>
       </div>
 
       <div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-y border-sky-200/10 py-4">
@@ -81,13 +81,13 @@ export default function WeatherAnalytics({ weather }: { weather: WeatherSnapshot
       </div>
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-xs leading-6 text-slate-400">
-        <p>ช่วงวันที่ตัวอย่าง · {period}</p>
+        <p>ช่วงข้อมูลย้อนหลัง · {period}</p>
         <p role="status" aria-atomic="true">{config.name} · {range} วัน · ข้อมูล {summary.count}/{range} วัน</p>
       </div>
 
       {summary.count > 0 && summary.count < range && (
         <p role="status" className="mt-3 rounded-xl border border-amber-200/15 bg-amber-200/5 px-4 py-3 text-xs leading-6 text-amber-200">
-          ข้อมูลยังไม่ครบช่วงที่เลือก สถิติคำนวณจาก {summary.count} วันที่มีข้อมูล ไม่เติมวันที่ขาดด้วยศูนย์
+          ข้อมูลยังไม่ครบช่วงที่เลือก สถิติคำนวณจาก {summary.count} วันที่มีข้อมูล ไม่เติมวันที่ขาดด้วยศูนย์ · เส้นกราฟเว้นช่วงวันที่ไม่มีข้อมูล
         </p>
       )}
 
@@ -136,7 +136,7 @@ export default function WeatherAnalytics({ weather }: { weather: WeatherSnapshot
 
         {summary.count > 0 && (
           <details className="mt-5 border-t border-white/[0.07] pt-4 text-xs text-slate-400">
-            <summary className="w-fit cursor-pointer rounded py-1 hover:text-sky-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300">ดูข้อมูลตัวอย่าง · {summary.count} วัน</summary>
+            <summary className="w-fit cursor-pointer rounded py-1 hover:text-sky-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300">ดูข้อมูลรายวัน · {summary.count} วัน</summary>
             <div className="mt-3 max-h-64 overflow-auto rounded-xl border border-white/10">
               <table className="w-full text-left text-xs">
                 <caption className="sr-only">{config.dailyLabel} ของ {weather.location} ช่วง {period}</caption>
@@ -158,10 +158,11 @@ export default function WeatherAnalytics({ weather }: { weather: WeatherSnapshot
       </div>
 
       <p className="mt-4 text-xs leading-6 text-slate-400">
-        ข้อมูลสมมติช่วง 14 ต.ค.–12 พ.ย. 2569 ไม่ใช่ข้อมูลอากาศย้อนหลังจริง · ช่วง 7 วันใช้ข้อมูล 7 วันท้ายของชุด 30 วัน
+        ข้อมูลย้อนหลัง ERA5 จาก Open-Meteo · ช่วง 7 วันใช้ 7 วันท้ายของชุด 30 วัน · เว้น 7 วันล่าสุดเพื่อเผื่อรอบเผยแพร่ข้อมูลย้อนหลัง
         <br />
         ค่าสูงสุด–ต่ำสุดหมายถึงค่าเฉลี่ยรายวันที่สูงสุด–ต่ำสุด ไม่ใช่ค่าสูงสุด–ต่ำสุดรายชั่วโมง · ทุกวันมีน้ำหนักเท่ากันในการหาค่าเฉลี่ย
       </p>
+      <p className="mt-3 text-xs leading-6 text-slate-400">ข้อมูลวิเคราะห์ย้อนหลัง ไม่ใช่ค่าจากสถานีในเขตโดยตรง · ค่าเฉลี่ยคำนวณจากข้อมูลครบ 24 ชั่วโมงต่อวัน ไม่เติมค่าที่ขาด · ดึงข้อมูล <time dateTime={weather.fetchedAt}>{new Intl.DateTimeFormat("th-TH", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Bangkok" }).format(new Date(weather.fetchedAt))}</time> (ไทย)<br/>Source: <a className="underline text-sky-200" href="https://open-meteo.com/en/docs/historical-weather-api" target="_blank" rel="noreferrer">Open-Meteo / ECMWF ERA5</a> · <a className="underline" href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a> · แปลงรายชั่วโมงเป็นค่าเฉลี่ยรายวันและสถิติ</p>
       <WeatherInsights history={weather.history} location={weather.location} metric={metric} range={range} />
     </section>
   );

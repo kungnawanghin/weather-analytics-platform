@@ -125,6 +125,13 @@ function ChartCanvas({
     nice: !valueDomain,
   });
 
+  const segments: ChartPoint[][] = [];
+  data.forEach((point, index) => {
+    if (!index || (hasDates && positions[index] - positions[index - 1] > 86400000)) segments.push([]);
+    segments[segments.length - 1].push(point);
+  });
+  const pointX = (point: ChartPoint) => xScale(hasDates ? Date.parse(`${point.date}T00:00:00Z`) : data.indexOf(point));
+
   const activePoint =
     activeIndex === null ? null : data[activeIndex];
 
@@ -244,25 +251,12 @@ function ChartCanvas({
         ))}
 
         {/* พื้นที่ไล่สีใต้เส้นกราฟ */}
-        <AreaClosed<ChartPoint>
-          data={data}
-          x={(_, index) => xScale(positions[index])}
-          y={(point) => yScale(point.value)}
-          yScale={yScale}
-          curve={curveMonotoneX}
-          fill={`url(#${gradientId})`}
-        />
-
-        {/* เส้นกราฟ */}
-        <LinePath<ChartPoint>
-          data={data}
-          x={(_, index) => xScale(positions[index])}
-          y={(point) => yScale(point.value)}
-          curve={curveMonotoneX}
-          stroke={color}
-          strokeWidth={3}
-          strokeLinecap="round"
-        />
+        {segments.map((segment, index) => <g key={index}>
+          {segment.length === 1 ? <circle cx={pointX(segment[0])} cy={yScale(segment[0].value)} r={3} fill={color} /> : <>
+            <AreaClosed<ChartPoint> data={segment} x={pointX} y={point => yScale(point.value)} yScale={yScale} curve={curveMonotoneX} fill={`url(#${gradientId})`} />
+            <LinePath<ChartPoint> data={segment} x={pointX} y={point => yScale(point.value)} curve={curveMonotoneX} stroke={color} strokeWidth={3} strokeLinecap="round" />
+          </>}
+        </g>)}
 
         {/* ชื่อวันบนแกนนอน */}
         {data.map((point, index) => {

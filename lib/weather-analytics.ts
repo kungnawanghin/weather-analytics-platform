@@ -36,9 +36,9 @@ export function summarizeHistory(history: WeatherHistoryDay[], metric: Analytics
     ? new Date(Date.parse(`${endDate}T00:00:00Z`) - (range - 1) * dayMs).toISOString().slice(0, 10)
     : null;
   const points = sorted
-    .filter((row) => startDate && row.date >= startDate && Number.isFinite(row[metric]) &&
-      (metric !== "humidity" || (row.humidity >= 0 && row.humidity <= 100)))
-    .map((row) => ({ date: row.date, value: row[metric] }));
+    .filter((row) => startDate && row.date >= startDate && typeof row[metric] === "number" && Number.isFinite(row[metric]) &&
+      (metric !== "humidity" || (row.humidity !== null && row.humidity >= 0 && row.humidity <= 100)))
+    .map((row) => ({ date: row.date, value: row[metric] as number }));
   const values = points.map((point) => point.value);
   return {
     points, startDate, endDate, count: points.length, expectedCount: range,

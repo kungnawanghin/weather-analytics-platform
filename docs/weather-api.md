@@ -22,16 +22,52 @@ Audit registry, parser and API/cache behaviour: `node scripts/test-weather-api.c
 
 ## Data lifecycle
 
-The keyed client component resets to loading on selection changes and aborts its
-previous request. One response drives both Current Weather and the 3-day forecast.
+The parent `useAreaWeather` hook owns per-area snapshots shared by the map,
+Current Weather and the 3-day forecast. It loads the selection first, then visible
+map regions only (six provinces in overview or the focused province's districts),
+with at most three concurrent requests. View changes abort outstanding client
+requests. Per-area client cache lasts five minutes and resets across Bangkok days;
+there is no background polling. Retry reloads failures while reusing valid successes.
+Missing/loading/error values are grey, never mock numbers or zeros. Rain colour
+uses the first forecast day's maximum precipitation probability, not current rain.
 The server uses a five-minute in-memory cache per registered ID, coalesces concurrent
 requests for the same area, and invalidates on Bangkok calendar-day changes.
 This cache resets on restart and is per process/instance, not durable storage or
 a global deployment-wide rate limiter. No background collection is implemented.
 The UI displays provider-valid time separately from fetch time; it does not poll.
 
-Map colours/numbers, historical charts and Insights remain explicitly labelled
-mock data. No model forecast is stored or presented as observed history.
+Map colours/numbers use the same fetched snapshot as the selected area's cards.
+Provider-valid times can differ across regions; each tooltip shows its own time.
+Historical charts and Insights now use the separate ERA5 history endpoint described
+below. No mock weather is used by the application. Forecasts are not presented as
+station measurements or mixed into reanalysis history.
+
+## Historical weather and analytics
+
+`GET /api/weather/history?areaId=TH-10` uses the same registered point with the
+Open-Meteo Historical Weather archive, explicitly selecting `models=era5`.
+ERA5 is reanalysis (about 25 km resolution), not district-level station readings.
+Its documented publication delay is about five days. We leave a seven-day buffer
+for UTC publication and completed Bangkok days, then request 30 calendar days.
+The UI displays the actual start/end dates, fetch time, source and delay.
+
+Temperature and relative humidity are requested hourly in Asia/Bangkok. A daily
+mean is only computed when all 24 distinct hourly values for that metric are
+valid. Missing/invalid hours yield null for that day's metric; values are never
+filled with zero or borrowed from another date. The other metric can remain valid.
+Duplicate hours, wrong units or malformed responses fail validation. Both 7/30-day
+views and Insights consume this single series, including null days that preserve
+the requested window. Charts break at missing dates instead of bridging gaps.
+
+History loads only for the selected area; changing the map does not fetch archive
+data for every visible region. Keyed client components abort requests on selection
+changes. Client/server caches last one hour, keyed by area and requested Bangkok
+end date, and requests for the same area are coalesced. All-null responses and
+errors are not cached. These are in-memory caches, not a database or collector.
+
+Run `node scripts/test-weather-history.cjs` for history parser, calendar-window,
+analytics, missing-value, endpoint-validation and cache/retry checks.
+Archive documentation: https://open-meteo.com/en/docs/historical-weather-api
 
 Provider: https://open-meteo.com/en/docs
 Licence: https://creativecommons.org/licenses/by/4.0/

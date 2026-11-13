@@ -5,6 +5,7 @@ const registry = require('../lib/weather-locations.json');
 const { parseLiveWeather } = require('../lib/live-weather.ts');
 const { getAreaWeather } = require('../lib/weather-service.ts');
 const { GET } = require('../app/api/weather/route.ts');
+const { mapWeatherValue, mapWeatherLabel } = require('../lib/map-weather.ts');
 
 const payload = {
   timezone: 'Asia/Bangkok',
@@ -17,6 +18,17 @@ async function run() {
   assert.deepEqual(registry, generate());
   assert.equal(registry.filter(x => x.area.level === 'province').length, 6);
   assert.equal(registry.filter(x => x.area.level === 'district').length, 79);
+  const mapWeather = parseLiveWeather(payload, '2026-11-13T16:50:00Z');
+  const ready = { status: 'ready', weather: mapWeather };
+  assert.equal(mapWeatherValue(ready, 'temperature'), mapWeather.temperature);
+  assert.equal(mapWeatherValue(ready, 'humidity'), mapWeather.humidity);
+  assert.equal(mapWeatherValue(ready, 'rainChance'), mapWeather.forecast[0].rainChance);
+  assert.equal(mapWeatherValue({ status: 'error' }, 'temperature'), null);
+  assert.equal(mapWeatherValue(undefined, 'humidity'), null);
+  assert.equal(mapWeatherLabel({ status: 'error' }, 'temperature', '°C'), 'ไม่มีข้อมูล');
+  assert.equal(mapWeatherLabel({ status: 'loading' }, 'temperature', '°C'), 'กำลังโหลด…');
+  mapWeather.forecast[0].rainChance = 0;
+  assert.equal(mapWeatherLabel(ready, 'rainChance', '%'), '0%');
   for (const location of registry) {
     const result = parseLiveWeather(payload, '2026-11-13T16:50:00Z', location);
     assert.ok(result.location.startsWith(location.area.name));
