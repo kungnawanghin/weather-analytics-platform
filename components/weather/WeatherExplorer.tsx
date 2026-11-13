@@ -27,6 +27,10 @@ export default function WeatherExplorer() {
 
   return (
     <>
+      <div className="mb-10 flex flex-wrap items-center justify-between gap-5 border-b border-white/10 pb-6">
+        <div><p className="eyebrow">The weather observatory</p><p className="mt-2 text-sm text-slate-400">หนึ่งแผนที่ หลายมุมมองของอากาศรอบตัวคุณ</p></div>
+        <div className="flex gap-6 text-xs text-slate-400"><span><strong className="mr-2 text-lg font-normal tabular-nums text-sky-100">06</strong>จังหวัด</span><span><strong className="mr-2 text-lg font-normal tabular-nums text-sky-100">79</strong>เขต / อำเภอ</span></div>
+      </div>
       <WeatherMap resource={resource} selected={selected} onSelect={setSelected} onExplore={exploreDetails} onRetry={retry} />
       <div id="weather-details" ref={detailsRef} tabIndex={-1} aria-label={`ข้อมูลอากาศ ${weather.location}`} className="scroll-mt-8 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-sky-300/50">
         <div role="status" className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
@@ -37,6 +41,11 @@ export default function WeatherExplorer() {
         <WeatherForecast weather={weather} />
         <WeatherAnalytics weather={weather} />
       </div>
+      <footer className="mt-20 flex flex-wrap items-center justify-between gap-5 border-t border-white/10 pt-7 text-xs leading-6 text-slate-400">
+        <div><p className="font-medium tracking-[.12em] text-slate-200">BEYOND THE FORECAST.</p><p className="mt-1">Weather, with a little more perspective.</p></div>
+        <p>กรุงเทพมหานครและปริมณฑล · Portfolio project<br/>ข้อมูลอากาศทั้งหมดเป็นข้อมูลสมมติสำหรับการสาธิต</p>
+        <a href="#top" className="rounded-full border border-white/15 px-4 py-2 text-sky-200 transition hover:bg-white/5">กลับด้านบน ↑</a>
+      </footer>
     </>
   );
 }

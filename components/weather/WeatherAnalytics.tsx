@@ -48,14 +48,14 @@ export default function WeatherAnalytics({ weather }: { weather: WeatherSnapshot
     >
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-sky-300">Beyond the numbers</p>
+          <p className="eyebrow">03 / Beyond the numbers</p>
           <h2 id="analytics-title" className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">Weather Analytics</h2>
           <p className="mt-3 text-sm text-slate-400">{config.patterns} · {weather.location}</p>
         </div>
         <span className="rounded-full border border-amber-200/15 bg-amber-200/5 px-3 py-1.5 text-[11px] text-amber-200">Demo · Mock data</span>
       </div>
 
-      <div className="mt-7 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-sky-200/10 bg-[#0b1929] p-3">
+      <div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-y border-sky-200/10 py-4">
         <div role="group" aria-label="ข้อมูลที่วิเคราะห์" className="flex flex-wrap gap-1">
           {(Object.keys(analyticsMetrics) as AnalyticsMetric[]).map((key) => (
             <button
@@ -91,19 +91,19 @@ export default function WeatherAnalytics({ weather }: { weather: WeatherSnapshot
         </p>
       )}
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-3">
+      <div className="mt-6 grid grid-cols-3 divide-x divide-white/10 border-b border-white/10 pb-6">
         {statistics.map((statistic) => (
-          <article key={statistic.label} className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#122438] to-[#0d192a] p-5">
-            <h3 className="text-xs leading-6 text-slate-400">{statistic.label}</h3>
-            <p className="mt-3 text-3xl font-medium tabular-nums text-slate-100">
+          <article key={statistic.label} className="min-w-0 px-2 py-4 first:pl-0 sm:px-7">
+            <h3 className="text-[10px] leading-5 text-slate-400 sm:text-xs">{statistic.label}</h3>
+            <p className="mt-3 text-[26px] font-light tabular-nums tracking-tight text-slate-100 sm:text-4xl">
               {statistic.value === null ? "—" : statistic.value.toFixed(1)}
-              <span className="ml-1.5 text-lg text-sky-200">{config.unit}</span>
+              <span className="ml-0.5 text-xs text-sky-200 sm:ml-1.5 sm:text-lg">{config.unit}</span>
             </p>
           </article>
         ))}
       </div>
 
-      <div className="mt-6 overflow-hidden rounded-[22px] border border-sky-200/10 bg-[#0d1b2c] p-4 sm:p-6">
+      <div className="surface mt-6 overflow-hidden rounded-[28px] p-4 sm:p-7">
         <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
           <div>
             <h3 className="font-medium text-slate-100">{config.title}</h3>

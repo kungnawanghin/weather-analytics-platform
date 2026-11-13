@@ -15,7 +15,7 @@ export default function WeatherForecast({ weather }: { weather: WeatherSnapshot 
       <div aria-hidden="true" className="pointer-events-none absolute -top-10 left-1/4 -z-10 h-56 w-1/2 rounded-full bg-sky-500/[0.045] blur-3xl" />
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="flex items-center gap-2.5 text-[10px] font-medium uppercase tracking-[0.26em] text-sky-300"><span aria-hidden="true" className="h-px w-6 bg-sky-300/70" />3-day forecast</p>
+          <p className="eyebrow">02 / 3-day forecast</p>
           <h2 id="forecast-title" className="mt-3 text-[27px] font-semibold tracking-[-0.035em] text-slate-100 sm:text-3xl">A little further ahead.</h2>
           <p className="mt-3 text-sm leading-6 text-slate-400">พยากรณ์รายวัน · {weather.location} · เวลาไทย (UTC+7)</p>
         </div>

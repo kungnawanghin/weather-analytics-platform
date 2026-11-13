@@ -1,26 +1,39 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+  --background: #060e19;
+  --foreground: #eaf2f8;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-geist-sans), Tahoma, sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+button, a, select, input { -webkit-tap-highlight-color: transparent; }
+button:not(:disabled), select:not(:disabled), summary { cursor: pointer; }
+::selection { background: #80d9df40; color: #fff; }
+:focus-visible { outline: 2px solid #8edce5; outline-offset: 4px; }
+.observatory-shell { background: radial-gradient(ellipse at 85% 15%, #16354840, transparent 38%), #060e19; }
+.eyebrow { color: #8cd6df; font-size: 10px; font-weight: 500; letter-spacing: .23em; text-transform: uppercase; }
+.surface { border: 1px solid #bde9ff14; background: linear-gradient(135deg, #102336, #0b1928 65%); box-shadow: inset 0 1px #ffffff04, 0 24px 60px -45px #000; }
+.section-title { font-size: clamp(1.7rem, 3vw, 2.4rem); line-height: 1.25; font-weight: 500; letter-spacing: -.04em; }
+.primary-action { display: inline-flex; align-items: center; justify-content: center; gap: 1rem; min-height: 44px; border-radius: 999px; background: #b6e9eb; padding: .75rem 1.25rem; color: #09202b; font-size: 12px; font-weight: 600; transition: background .2s, transform .2s; }
+.primary-action:hover { background: #dcfcfc; transform: translateY(-2px); }
+#weather-map, #weather-details, #weather-analytics, #weather-insights, #weather-forecast { scroll-margin-top: 6rem; }
+#weather-map h2, #analytics-title, #forecast-title, #insights-title { font-weight: 500; letter-spacing: -.04em; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  .primary-action:hover { transform: none; }
 }

@@ -55,13 +55,13 @@ export default function WeatherInsights({ history, location, metric, range }: We
   const differenceUnit = metric === "humidity" ? "จุดเปอร์เซ็นต์" : "°C";
   const windowLabel = (dates: string[]) => dates.length
     ? `${formatDate(dates[0], true)} – ${formatDate(dates[dates.length - 1], true)}` : "ยังไม่มีช่วงข้อมูล";
-  const cardClass = "relative flex min-w-0 flex-col overflow-hidden rounded-[22px] border border-sky-200/10 bg-gradient-to-br from-[#102438] via-[#0c1b2c] to-[#0a1626] p-5 sm:p-6";
+  const cardClass = "surface relative flex min-w-0 flex-col overflow-hidden rounded-[24px] p-5 sm:p-7";
 
   return (
     <section id="weather-insights" aria-labelledby="insights-title" className="mt-12 scroll-mt-8 border-t border-white/[0.07] pt-9">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-sky-300">The story in the data</p>
+          <p className="eyebrow">04 / The story in the data</p>
           <h3 id="insights-title" className="mt-3 text-2xl font-semibold tracking-tight text-slate-100">Weather Insights</h3>
           <p className="mt-3 text-sm leading-6 text-slate-400">{location} · ช่วง {range} วันที่เลือก</p>
         </div>

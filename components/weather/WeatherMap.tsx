@@ -29,7 +29,7 @@ export default function WeatherMap({ resource, selected, onSelect, onExplore, on
   const reduceMotion = useReducedMotion();
   const gridId = `map-grid-${useId().replace(/:/g, "")}`;
   const shadowId = `map-shadow-${useId().replace(/:/g, "")}`;
-  const height = width < 600 ? 420 : 550;
+  const height = width < 600 ? 440 : 610;
   const focusedProvinceId = selected?.provinceId ?? null;
   const focusedProvince = provinceConfigs.find((item) => item.id === focusedProvinceId);
   const viewMode = reduceMotion ? "2d" : viewPreference ?? (width >= 640 ? "2.5d" : "2d");
@@ -108,14 +108,14 @@ export default function WeatherMap({ resource, selected, onSelect, onExplore, on
     <section id="weather-map" aria-labelledby="weather-map-title" className="mb-16 scroll-mt-8">
       <div className="mb-7 flex flex-wrap items-end justify-between gap-5">
         <div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-sky-300">The metropolitan weather atlas</p>
+          <p className="eyebrow">Explore / The metropolitan atlas</p>
           <h2 id="weather-map-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Every area. A different story.</h2>
           <p className="mt-3 text-sm leading-6 text-slate-400">สำรวจอากาศกรุงเทพฯ และปริมณฑล · เลือกจังหวัด แล้วเจาะลึกถึงเขต/อำเภอ</p>
         </div>
         <span className="inline-flex items-center gap-2 rounded-full border border-amber-200/15 bg-amber-200/5 px-3 py-2 text-[11px] text-amber-200"><span className="h-1.5 w-1.5 rounded-full bg-amber-200" />DEMO · ไม่ใช่ข้อมูลอากาศจริง</span>
       </div>
 
-      <div className="overflow-hidden rounded-[24px] border border-sky-200/15 bg-[#091523] shadow-2xl shadow-black/20">
+      <div className="overflow-hidden rounded-[28px] border border-sky-200/15 bg-[#0a1827] shadow-[0_32px_100px_-60px_#000]">
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.07] px-4 py-4 sm:px-7">
           <nav aria-label="เส้นทางพื้นที่" className="flex flex-wrap items-center gap-2 text-sm">
             <button type="button" onClick={() => selectArea(null)} className="rounded px-1 py-1 text-slate-400 transition hover:text-sky-200 focus-visible:outline-2 focus-visible:outline-sky-300">ภาพรวม</button>
@@ -138,9 +138,9 @@ export default function WeatherMap({ resource, selected, onSelect, onExplore, on
           </div>
         </div>
 
-        <div ref={containerRef} className="relative isolate w-full overflow-hidden bg-[radial-gradient(ellipse_at_center,#152b3c_0%,#091523_75%)]">
+        <div ref={containerRef} className="relative isolate w-full overflow-hidden bg-[radial-gradient(ellipse_at_center,#19384a_0%,#0a1827_72%)]">
           <div className="pointer-events-none absolute left-5 top-5 z-10 text-[10px] uppercase tracking-[0.2em] text-slate-400 sm:left-8"><span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-sky-300" />{focusedProvinceId ? `${districts.length} districts` : "06 provinces · 79 districts"}</div>
-          <div className="pointer-events-none absolute right-5 top-5 z-10 text-xs text-slate-400">N ↑</div>
+          <div className="pointer-events-none absolute right-5 top-5 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-sky-200/15 text-[10px] text-slate-300">N ↑</div>
 
           {resource.status === "loading" && <div role="status" className="flex min-h-[420px] items-center justify-center gap-3 text-sm text-sky-200"><span className="h-4 w-4 animate-spin rounded-full border border-sky-300/20 border-t-sky-300 motion-reduce:animate-none" />กำลังเตรียมแผนที่…</div>}
           {resource.status === "error" && <div role="alert" className="flex min-h-[420px] flex-col items-center justify-center gap-4 px-6 text-center"><p className="text-sm text-rose-200">{resource.message}</p><button type="button" onClick={onRetry} className="rounded-lg border border-white/20 px-4 py-2 text-sm">ลองโหลดใหม่</button></div>}

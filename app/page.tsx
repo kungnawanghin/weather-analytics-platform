@@ -1,8 +1,11 @@
 import ScrollExpandMedia from "../components/ui/scroll-expansion-hero";
 import WeatherExplorer from "../components/weather/WeatherExplorer";
+import SiteNavigation from "../components/weather/SiteNavigation";
 
 export default function Home() {
   return (
+    <main id="top">
+    <SiteNavigation />
     <ScrollExpandMedia
       mediaType="video"
       mediaSrc="/weather.mp4"
@@ -12,5 +15,6 @@ export default function Home() {
     >
       <WeatherExplorer />
     </ScrollExpandMedia>
+    </main>
   );
 }
