@@ -41,12 +41,34 @@ SQLite records are not migrated automatically. The website still reads current
 weather and ERA5 history through its existing APIs; cloud storage does not
 change those data sources.
 
-This step does not enable cloud scheduling. Until a hosted schedule is configured,
-run this collector manually. Next: configure repository secrets and a scheduled
-GitHub Actions workflow, verify a successful run, then disable the old Windows
-task if it is no longer needed.
+## Hourly GitHub Actions collection
+
+`.github/workflows/collect-weather.yml` runs on the default branch every hour
+at minute 17 (UTC and Asia/Bangkok share the same minute). It can also be
+started manually from Actions > Collect weather hourly > Run workflow.
+
+Configure repository Actions secrets named `SUPABASE_URL` and
+`SUPABASE_SECRET_KEY` using the values from the local environment file.
+Never put secret values into workflow YAML. Only the collection step receives
+them. Tests run first without secrets. The job uses Node 24 built-ins, so it
+does not install project dependencies or build/start Next.js.
+
+The workflow has read-only repository permissions, no persisted checkout
+credential, a 35-minute timeout and a concurrency group that prevents overlap.
+Check a run's collection log for requested/inserted/duplicates/failed counts;
+any failed area makes the job fail. Retry with Run workflow; duplicate snapshots
+are ignored. The workflow does not seed or change the database schema.
+
+Once a hosted run succeeds, the old `WeatherAnalytics-CollectHourly` Windows
+task can be disabled; local SQLite data remains available. Cloud collection
+does not need the user's computer or web server to be running.
+
+GitHub schedules can be delayed or dropped during load. Public-repository
+scheduled workflows are disabled after 60 days without repository activity.
+This is not a guaranteed exact-hour service or a backfill of missed snapshots.
 
 References:
 - https://supabase.com/docs/guides/api/api-keys
 - https://docs.postgrest.org/en/stable/references/api/tables_views.html#upsert
 - https://open-meteo.com/en/docs
+- https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule
