@@ -72,3 +72,67 @@ Archive documentation: https://open-meteo.com/en/docs/historical-weather-api
 Provider: https://open-meteo.com/en/docs
 Licence: https://creativecommons.org/licenses/by/4.0/
 Free service terms (non-commercial and request limits): https://open-meteo.com/en/terms
+
+## Local collection database
+
+The manual collector uses `node:sqlite` on Node 24 and requires a running local
+Next.js server. Schema: `database/schema.sql`; database: `data/weather.sqlite`.
+The data directory is ignored by Git. Store it on persistent disk when deploying;
+this local database is not suitable for an ephemeral serverless filesystem.
+
+Initialize and seed: `node scripts/init-database.cjs`, then
+`node scripts/seed-areas.cjs`. `areas` holds the 85 registry locations;
+`weather_records` holds current model snapshots, not station observations or ERA5.
+
+- `node scripts/collect-weather.cjs`: first three registered areas (safe trial).
+- `node scripts/collect-weather.cjs --limit 10`: first ten areas.
+- `node scripts/collect-weather.cjs --all`: all six provinces and 79 districts.
+- `node scripts/view-weather.cjs`: read-only counts and latest ten saved records.
+- `node scripts/test-collector.cjs`: isolated in-memory SQLite tests; no live data writes.
+
+Set `WEATHER_API_BASE_URL` when the server uses a different port. Requests run
+sequentially with a 20-second timeout each. Every payload is validated against
+its requested area name and checked for valid values/times before insertion.
+Valid/fetch timestamps are normalized to UTC. Source `open-meteo` and model
+`best_match` describe the current API's default model-selection configuration.
+Uniqueness is `(area_id, source, model, valid_at)`; repeated timestamps are skipped
+without changing their original fetch time. Each area is saved independently, so
+one failure does not roll back successful areas. The summary distinguishes new
+records, duplicates and failures; any failure sets exit code 1. Rerunning is safe.
+
+Collection can be manual or scheduled on Windows as described below. The
+website's historical charts continue to use the separately labelled ERA5 API.
+
+### Hourly Windows collection
+
+`./scripts/register-collector-task.ps1` registers the task
+`WeatherAnalytics-CollectHourly` for the current signed-in user with limited
+privileges. It starts at the next local clock hour and repeats every hour without
+an expiry date. Registration captures the absolute Node/project paths. An existing
+task with a different action is not overwritten. Use `-ApiBaseUrl` when registering
+against a port other than 3000. This task does not start the web server.
+
+Requirements: Windows must be awake, the registering user must be signed in, the
+local API must be running, and the weather provider must be reachable. A missed
+trigger can run when the machine becomes available again; this does not recreate
+weather snapshots for the hours the machine was off.
+
+The runner `scripts/run-hourly-collector.ps1` launches Node without a visible
+console. Task Scheduler uses IgnoreNew and an OS file lock prevents overlapping
+runner instances. Each run has a 35-minute child-process timeout (40-minute task
+limit). Daily UTF-8 logs are appended under `data/collector-logs/YYYY-MM-DD.log`;
+the UTC offset is present on run-start/run-finish timestamps. The runner preserves
+the collector's nonzero exit code for partial failures. Logs and SQLite data remain
+local and are ignored by Git. Log rotation is not implemented yet.
+
+Useful PowerShell commands:
+
+```powershell
+Get-ScheduledTaskInfo -TaskName 'WeatherAnalytics-CollectHourly'
+Start-ScheduledTask -TaskName 'WeatherAnalytics-CollectHourly'
+Disable-ScheduledTask -TaskName 'WeatherAnalytics-CollectHourly'
+Enable-ScheduledTask -TaskName 'WeatherAnalytics-CollectHourly'
+```
+
+Changes to the API base URL require updating the registered action deliberately;
+changing a variable in an unrelated Terminal does not change the task's URL.
