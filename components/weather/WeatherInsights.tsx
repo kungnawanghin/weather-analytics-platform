@@ -65,7 +65,7 @@ export default function WeatherInsights({ history, location, metric, range }: We
           <h3 id="insights-title" className="mt-3 text-2xl font-semibold tracking-tight text-slate-100">Weather Insights</h3>
           <p className="mt-3 text-sm leading-6 text-slate-400">{location} · ช่วง {range} วันที่เลือก</p>
         </div>
-        <span className="rounded-full border border-sky-200/15 bg-sky-200/5 px-3 py-1.5 text-[10px] text-sky-200">Calculated · ERA5</span>
+        <span className="rounded-full border border-sky-200/15 bg-sky-200/5 px-3 py-1.5 text-[10px] text-sky-200">Calculated · Collected data</span>
       </div>
 
       <p className="mt-4 text-xs leading-6 text-slate-400">
@@ -80,7 +80,7 @@ export default function WeatherInsights({ history, location, metric, range }: We
             <span className="rounded-xl border border-sky-200/10 bg-sky-200/5 p-2 text-sky-200"><InsightIcon type="temperature" /></span>
             <span aria-hidden="true" className="text-[10px] tracking-widest text-slate-500">01 / WARMEST DAY</span>
           </div>
-          <h4 className="text-sm font-medium leading-6 text-slate-300">วันที่อุณหภูมิเฉลี่ยสูงสุด</h4>
+          <h4 className="text-sm font-medium leading-6 text-slate-300">วันที่อุณหภูมิเฉลี่ยที่เก็บได้สูงสุด</h4>
           <p className="mt-4 text-4xl font-medium tabular-nums tracking-tight text-sky-100">
             {insight.hottest.value === null ? "—" : insight.hottest.value.toFixed(1)}<span className="ml-1.5 text-lg text-sky-200/80">°C</span>
           </p>
@@ -93,7 +93,7 @@ export default function WeatherInsights({ history, location, metric, range }: We
             <span className="rounded-xl border border-cyan-200/10 bg-cyan-200/5 p-2 text-cyan-200"><InsightIcon type="humidity" /></span>
             <span aria-hidden="true" className="text-[10px] tracking-widest text-slate-500">02 / MOST HUMID</span>
           </div>
-          <h4 className="text-sm font-medium leading-6 text-slate-300">วันที่ความชื้นเฉลี่ยสูงสุด</h4>
+          <h4 className="text-sm font-medium leading-6 text-slate-300">วันที่ความชื้นเฉลี่ยที่เก็บได้สูงสุด</h4>
           <p className="mt-4 text-4xl font-medium tabular-nums tracking-tight text-cyan-100">
             {insight.mostHumid.value === null ? "—" : insight.mostHumid.value.toFixed(1)}<span className="ml-1.5 text-lg text-cyan-200/80">%</span>
           </p>
@@ -122,11 +122,11 @@ export default function WeatherInsights({ history, location, metric, range }: We
               <dd className="ml-auto whitespace-nowrap tabular-nums text-slate-200">{last.average === null ? `ข้อมูล ${last.count}/3 วัน` : `${last.average.toFixed(1)}${config.unit}`}</dd>
             </div>
           </dl>
-          <p className="mt-auto pt-5 text-xs leading-6 text-slate-400">{delta === null ? "ต้องมีข้อมูลครบ 3 วันต้นช่วงและ 3 วันท้ายช่วง โดยไม่แทนวันที่ขาดด้วยวันอื่น" : "ผลต่าง = ค่าเฉลี่ย 3 วันท้าย − ค่าเฉลี่ย 3 วันแรก คำนวณก่อนปัดเศษ"}</p>
+          <p className="mt-auto pt-5 text-xs leading-6 text-slate-400">{delta === null ? "ต้องเก็บครบ 24 ชั่วโมงในแต่ละวันของ 3 วันต้นช่วงและ 3 วันท้ายช่วง จึงจะเปรียบเทียบได้" : "ผลต่าง = ค่าเฉลี่ย 3 วันท้าย − ค่าเฉลี่ย 3 วันแรก คำนวณก่อนปัดเศษ"}</p>
         </article>
       </div>
 
-      <p className="mt-4 text-xs leading-6 text-slate-400">เป็นการสรุปข้อมูลวิเคราะห์ย้อนหลัง ERA5 ในช่วงที่เลือก ไม่ใช่พยากรณ์หรือข้อสรุปแนวโน้มระยะยาว · ปัดค่าที่แสดงเป็นทศนิยม 1 ตำแหน่ง{metric === "humidity" ? " · ผลต่างความชื้นใช้จุดเปอร์เซ็นต์ เช่น 60% → 65% เท่ากับ +5 จุดเปอร์เซ็นต์" : ""}</p>
+      <p className="mt-4 text-xs leading-6 text-slate-400">สรุปค่าเฉลี่ยจากชั่วโมงที่เก็บได้ใน Supabase ของช่วงที่เลือก ไม่ใช่พยากรณ์หรือข้อสรุปแนวโน้มระยะยาว · ปัดค่าที่แสดงเป็นทศนิยม 1 ตำแหน่ง{metric === "humidity" ? " · ผลต่างความชื้นใช้จุดเปอร์เซ็นต์ เช่น 60% → 65% เท่ากับ +5 จุดเปอร์เซ็นต์" : ""}</p>
     </section>
   );
 }

@@ -37,9 +37,10 @@ The collector does not retry automatically; rerunning safely skips duplicates.
 
 Tests: `node scripts/test-supabase.cjs` (fake transport only, no cloud writes).
 Existing local SQLite scripts and Windows schedule are unchanged. Historical
-SQLite records are not migrated automatically. The website still reads current
-weather and ERA5 history through its existing APIs; cloud storage does not
-change those data sources.
+SQLite records are not migrated automatically. Current weather and forecast still
+read Open-Meteo live APIs. Dashboard history and Insights now read the collected
+Supabase records through the server-only history API, with explicit coverage.
+Set the same two server-side environment variables on the web host when deploying.
 
 ## Hourly GitHub Actions collection
 

@@ -7,7 +7,7 @@ export interface WeatherHistory {
   startDate: string;
   endDate: string;
   fetchedAt: string;
-  model: "ERA5";
+  model: "ERA5" | "best_match";
   history: WeatherHistoryDay[];
 }
 const dayMs = 86400000;

@@ -25,6 +25,8 @@ export interface WeatherHistoryDay {
   date: string;
   temperature: number | null;
   humidity: number | null;
+  /** Distinct collected local hours; undefined for the legacy ERA5 dataset. */
+  samples?: number;
 }
 
 export type WeatherCondition = "sunny" | "partly-cloudy" | "rain";

@@ -38,8 +38,10 @@ export function getWeatherInsights(history: WeatherHistoryDay[], metric: Analyti
     ? [0, 1, 2].map((offset) => dateOffset(selected.startDate!, offset)) : [];
   const lastDates = selected.endDate
     ? [-2, -1, 0].map((offset) => dateOffset(selected.endDate!, offset)) : [];
-  const first = meanWindow(selected.points, firstDates);
-  const last = meanWindow(selected.points, lastDates);
+  const incompleteDates = new Set(history.filter(row => row.samples !== undefined && row.samples < 24).map(row => row.date));
+  const completePoints = selected.points.filter(point => !incompleteDates.has(point.date));
+  const first = meanWindow(completePoints, firstDates);
+  const last = meanWindow(completePoints, lastDates);
 
   return {
     startDate: selected.startDate,

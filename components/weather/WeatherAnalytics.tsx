@@ -25,11 +25,12 @@ export default function WeatherAnalytics({ weather }: { weather: WeatherHistory 
   const [metric, setMetric] = useState<AnalyticsMetric>("temperature");
   const [range, setRange] = useState<AnalyticsRange>(7);
   const config = analyticsMetrics[metric];
+  const dailyLabel = `${config.name}เฉลี่ยจากชั่วโมงที่เก็บได้`;
   const summary = summarizeHistory(weather.history, metric, range);
   const chartData = summary.points.map((point) => ({
     ...point,
     label: formatDate(point.date),
-    tooltipLabel: formatDate(point.date, true),
+    tooltipLabel: `${formatDate(point.date, true)} · ${weather.history.find(row => row.date === point.date)?.samples ?? 0}/24 ชั่วโมง`,
   }));
   const period = summary.startDate && summary.endDate
     ? `${formatDate(summary.startDate, true)} – ${formatDate(summary.endDate, true)}`
@@ -52,7 +53,7 @@ export default function WeatherAnalytics({ weather }: { weather: WeatherHistory 
           <h2 id="analytics-title" className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">Weather Analytics</h2>
           <p className="mt-3 text-sm text-slate-400">{config.patterns} · {weather.location}</p>
         </div>
-        <span className="rounded-full border border-amber-200/15 bg-amber-200/5 px-3 py-1.5 text-[11px] text-amber-200">Open-Meteo · ERA5 Reanalysis</span>
+        <span className="rounded-full border border-amber-200/15 bg-amber-200/5 px-3 py-1.5 text-[11px] text-amber-200">Collected data · Supabase</span>
       </div>
 
       <div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-y border-sky-200/10 py-4">
@@ -85,6 +86,8 @@ export default function WeatherAnalytics({ weather }: { weather: WeatherHistory 
         <p role="status" aria-atomic="true">{config.name} · {range} วัน · ข้อมูล {summary.count}/{range} วัน</p>
       </div>
 
+      <p className="mt-3 text-xs leading-6 text-amber-200" role="status">ค่าเฉลี่ยคำนวณจากชั่วโมงที่เก็บได้จริงของแต่ละวัน อาจยังไม่ครบ 24 ชั่วโมง · วันนี้ยังสะสมข้อมูลอยู่ · จำนวนชั่วโมงแสดงใน Tooltip และตาราง</p>
+
       {summary.count > 0 && summary.count < range && (
         <p role="status" className="mt-3 rounded-xl border border-amber-200/15 bg-amber-200/5 px-4 py-3 text-xs leading-6 text-amber-200">
           ข้อมูลยังไม่ครบช่วงที่เลือก สถิติคำนวณจาก {summary.count} วันที่มีข้อมูล ไม่เติมวันที่ขาดด้วยศูนย์ · เส้นกราฟเว้นช่วงวันที่ไม่มีข้อมูล
@@ -109,7 +112,7 @@ export default function WeatherAnalytics({ weather }: { weather: WeatherHistory 
             <h3 className="font-medium text-slate-100">{config.title}</h3>
             <p className="mt-2 flex items-center gap-2 text-xs leading-6 text-slate-400">
               <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full" style={{ background: config.color }} />
-              {config.dailyLabel} · {config.unit}
+              {dailyLabel} · {config.unit}
             </p>
           </div>
           <span className="rounded-lg bg-sky-400/10 px-3 py-1.5 text-[11px] text-sky-200">{range} วัน · {summary.count} จุดข้อมูล</span>
@@ -123,9 +126,9 @@ export default function WeatherAnalytics({ weather }: { weather: WeatherHistory 
             data={chartData}
             unit={config.unit}
             color={config.color}
-            valueLabel={config.dailyLabel}
+            valueLabel={dailyLabel}
             valueDomain={metric === "humidity" ? [0, 100] : undefined}
-            label={`${config.dailyLabel} ${range} วัน · ${weather.location}`}
+            label={`${dailyLabel} ${range} วัน · ${weather.location}`}
           />
         )}
 
@@ -139,14 +142,15 @@ export default function WeatherAnalytics({ weather }: { weather: WeatherHistory 
             <summary className="w-fit cursor-pointer rounded py-1 hover:text-sky-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300">ดูข้อมูลรายวัน · {summary.count} วัน</summary>
             <div className="mt-3 max-h-64 overflow-auto rounded-xl border border-white/10">
               <table className="w-full text-left text-xs">
-                <caption className="sr-only">{config.dailyLabel} ของ {weather.location} ช่วง {period}</caption>
+                <caption className="sr-only">{dailyLabel} ของ {weather.location} ช่วง {period}</caption>
                 <thead className="sticky top-0 bg-[#14263a] text-slate-300">
-                  <tr><th scope="col" className="px-4 py-3 font-medium">วันที่</th><th scope="col" className="px-4 py-3 text-right font-medium">{config.name} ({config.unit})</th></tr>
+                  <tr><th scope="col" className="px-4 py-3 font-medium">วันที่</th><th scope="col" className="px-4 py-3 text-right font-medium">ชั่วโมงที่เก็บ</th><th scope="col" className="px-4 py-3 text-right font-medium">{config.name} ({config.unit})</th></tr>
                 </thead>
                 <tbody>
                   {summary.points.map((point) => (
                     <tr key={point.date} className="border-t border-white/5">
                       <td className="px-4 py-3"><time dateTime={point.date}>{formatDate(point.date, true)}</time></td>
+                      <td className="px-4 py-3 text-right tabular-nums">{weather.history.find(row => row.date === point.date)?.samples ?? 0}/24</td>
                       <td className="px-4 py-3 text-right tabular-nums text-slate-200">{point.value.toFixed(1)}{config.unit}</td>
                     </tr>
                   ))}
@@ -158,11 +162,11 @@ export default function WeatherAnalytics({ weather }: { weather: WeatherHistory 
       </div>
 
       <p className="mt-4 text-xs leading-6 text-slate-400">
-        ข้อมูลย้อนหลัง ERA5 จาก Open-Meteo · ช่วง 7 วันใช้ 7 วันท้ายของชุด 30 วัน · เว้น 7 วันล่าสุดเพื่อเผื่อรอบเผยแพร่ข้อมูลย้อนหลัง
+        ข้อมูล Open-Meteo ที่ระบบเก็บใน Supabase · ช่วง 7 วันใช้ 7 วันท้ายของชุด 30 วัน สิ้นสุดวันนี้ตามเวลาไทย · วันที่ยังไม่เริ่มเก็บหรือเก็บไม่สำเร็จจะแสดงเป็นช่องว่าง
         <br />
         ค่าสูงสุด–ต่ำสุดหมายถึงค่าเฉลี่ยรายวันที่สูงสุด–ต่ำสุด ไม่ใช่ค่าสูงสุด–ต่ำสุดรายชั่วโมง · ทุกวันมีน้ำหนักเท่ากันในการหาค่าเฉลี่ย
       </p>
-      <p className="mt-3 text-xs leading-6 text-slate-400">ข้อมูลวิเคราะห์ย้อนหลัง ไม่ใช่ค่าจากสถานีในเขตโดยตรง · ค่าเฉลี่ยคำนวณจากข้อมูลครบ 24 ชั่วโมงต่อวัน ไม่เติมค่าที่ขาด · ดึงข้อมูล <time dateTime={weather.fetchedAt}>{new Intl.DateTimeFormat("th-TH", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Bangkok" }).format(new Date(weather.fetchedAt))}</time> (ไทย)<br/>Source: <a className="underline text-sky-200" href="https://open-meteo.com/en/docs/historical-weather-api" target="_blank" rel="noreferrer">Open-Meteo / ECMWF ERA5</a> · <a className="underline" href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a> · แปลงรายชั่วโมงเป็นค่าเฉลี่ยรายวันและสถิติ</p>
+      <p className="mt-3 text-xs leading-6 text-slate-400">ข้อมูลจากแบบจำลอง ณ จุดอ้างอิง ไม่ใช่ค่าจากสถานีหรือค่าเฉลี่ยทั้งพื้นที่ · เลือกค่าล่าสุดหนึ่งรายการต่อชั่วโมง ไม่เติมค่าที่ขาด · อ่านฐานข้อมูลเมื่อ <time dateTime={weather.fetchedAt}>{new Intl.DateTimeFormat("th-TH", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Bangkok" }).format(new Date(weather.fetchedAt))}</time> (ไทย)<br/>Source: <a className="underline text-sky-200" href="https://open-meteo.com/en/docs" target="_blank" rel="noreferrer">Open-Meteo · best_match</a> · <a className="underline" href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a> · สรุปเฉพาะชั่วโมงที่เก็บได้ โดยแต่ละวันมีน้ำหนักเท่ากัน</p>
       <WeatherInsights history={weather.history} location={weather.location} metric={metric} range={range} />
     </section>
   );

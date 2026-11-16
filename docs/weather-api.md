@@ -33,41 +33,50 @@ uses the first forecast day's maximum precipitation probability, not current rai
 The server uses a five-minute in-memory cache per registered ID, coalesces concurrent
 requests for the same area, and invalidates on Bangkok calendar-day changes.
 This cache resets on restart and is per process/instance, not durable storage or
-a global deployment-wide rate limiter. No background collection is implemented.
+a global deployment-wide rate limiter. Separate hourly GitHub Actions collection
+persists current snapshots to Supabase; see `docs/supabase-collection.md`.
 The UI displays provider-valid time separately from fetch time; it does not poll.
 
 Map colours/numbers use the same fetched snapshot as the selected area's cards.
 Provider-valid times can differ across regions; each tooltip shows its own time.
-Historical charts and Insights now use the separate ERA5 history endpoint described
+Historical charts and Insights use the separate Supabase history endpoint described
 below. No mock weather is used by the application. Forecasts are not presented as
-station measurements or mixed into reanalysis history.
+station measurements or mixed with archive reanalysis.
 
 ## Historical weather and analytics
 
-`GET /api/weather/history?areaId=TH-10` uses the same registered point with the
-Open-Meteo Historical Weather archive, explicitly selecting `models=era5`.
-ERA5 is reanalysis (about 25 km resolution), not district-level station readings.
-Its documented publication delay is about five days. We leave a seven-day buffer
-for UTC publication and completed Bangkok days, then request 30 calendar days.
-The UI displays the actual start/end dates, fetch time, source and delay.
+`GET /api/weather/history?areaId=TH-10` reads `weather_records` from Supabase
+on the server, filtered to the selected registry ID, `source=open-meteo` and
+`model=best_match`. The secret key never enters client components or responses.
+Missing configuration/database errors return 502 with a generic message; no
+automatic archive or mock fallback is used. Empty successful reads return 30
+null days, distinguished from a database outage.
 
-Temperature and relative humidity are requested hourly in Asia/Bangkok. A daily
-mean is only computed when all 24 distinct hourly values for that metric are
-valid. Missing/invalid hours yield null for that day's metric; values are never
-filled with zero or borrowed from another date. The other metric can remain valid.
-Duplicate hours, wrong units or malformed responses fail validation. Both 7/30-day
-views and Insights consume this single series, including null days that preserve
-the requested window. Charts break at missing dates instead of bridging gaps.
+The window contains 30 Bangkok calendar days ending today; 7 days is its final
+seven days. Queries page through records with a stable order and fixed fetch
+cutoff. Within each Bangkok hour only the latest valid snapshot contributes,
+so repeated manual collections do not overweight an hour. Each day's value is
+the mean of collected hourly snapshots, with `samples` giving its hour count.
+Partial-day values are explicitly labelled, never called full 24-hour means.
+Days with no records stay null; no gaps are filled. Range statistics give each
+available day's mean equal weight, not each raw record. They are point model
+estimates, not station observations or area-wide averages.
 
-History loads only for the selected area; changing the map does not fetch archive
-data for every visible region. Keyed client components abort requests on selection
-changes. Client/server caches last one hour, keyed by area and requested Bangkok
-end date, and requests for the same area are coalesced. All-null responses and
-errors are not cached. These are in-memory caches, not a database or collector.
+Charts, statistics and peak Insights use the same series. The period-shift Insight
+requires all 24 hours in each of the three first and three final calendar days;
+otherwise it reports insufficient data. Charts need at least two available days.
+Tooltip/table show each day's hour count. Existing video, chart interaction,
+map selection, units and 7/30-day controls are retained.
 
-Run `node scripts/test-weather-history.cjs` for history parser, calendar-window,
-analytics, missing-value, endpoint-validation and cache/retry checks.
-Archive documentation: https://open-meteo.com/en/docs/historical-weather-api
+History loads only for the selected area. Keyed client components abort requests
+on selection changes. Client/server caches last five minutes, reset at Bangkok
+midnight, and coalesce server requests per area. Errors are not cached. Reading
+history never writes, seeds or changes the collection database.
+
+Run `node scripts/test-collected-history.cjs` for aggregation, partial coverage,
+pagination, endpoint validation, cache and retry. The old ERA5 parser is retained
+as an unused utility with tests in `scripts/test-weather-history.cjs`; it is not
+the Dashboard data source.
 
 Provider: https://open-meteo.com/en/docs
 Licence: https://creativecommons.org/licenses/by/4.0/

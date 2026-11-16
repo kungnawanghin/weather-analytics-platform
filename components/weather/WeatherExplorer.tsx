@@ -42,13 +42,13 @@ export default function WeatherExplorer() {
           <p className="text-sm text-slate-400">{selected ? "ข้อมูลพื้นที่ที่เลือก" : "เริ่มต้นแสดงจุดอ้างอิงกรุงเทพฯ · เลือกพื้นที่อื่นบนแผนที่ได้"}<span className="ml-2 text-sky-200">{location}</span></p>
           <a href="#weather-map" className="rounded px-2 py-1 text-xs text-sky-300 hover:text-white focus-visible:outline-2 focus-visible:outline-sky-300">กลับไปแผนที่ ↑</a>
         </div>
-        <p className="mb-6 text-xs leading-6 text-slate-400">แผนที่ Current Weather และพยากรณ์ใช้ข้อมูลชุดเดียวกันจาก Open-Meteo · กราฟและ Insights วิเคราะห์ข้อมูลย้อนหลัง ERA5 จากจุดอ้างอิงเดียวกัน</p>
+        <p className="mb-6 text-xs leading-6 text-slate-400">แผนที่ Current Weather และพยากรณ์ใช้ข้อมูลชุดเดียวกันจาก Open-Meteo · กราฟและ Insights วิเคราะห์ข้อมูลจุดอ้างอิงเดียวกันที่ระบบเก็บใน Supabase</p>
         <LiveWeather area={area} state={states[area.id]} onRetry={retryWeather} />
         <HistoricalWeather key={area.id} area={area} />
       </div>
       <footer className="mt-20 flex flex-wrap items-center justify-between gap-5 border-t border-white/10 pt-7 text-xs leading-6 text-slate-400">
         <div><p className="font-medium tracking-[.12em] text-slate-200">BEYOND THE FORECAST.</p><p className="mt-1">Weather, with a little more perspective.</p></div>
-        <p>กรุงเทพมหานครและปริมณฑล · Portfolio project<br/>แผนที่ / Current Weather / Forecast จาก Open-Meteo · Analytics / Insights ใช้ข้อมูลย้อนหลัง ERA5</p>
+        <p>กรุงเทพมหานครและปริมณฑล · Portfolio project<br/>แผนที่ / Current Weather / Forecast จาก Open-Meteo · Analytics / Insights ใช้ข้อมูลที่เก็บใน Supabase</p>
         <a href="#top" className="rounded-full border border-white/15 px-4 py-2 text-sky-200 transition hover:bg-white/5">กลับด้านบน ↑</a>
       </footer>
     </>
