@@ -2,6 +2,10 @@
 
 **Weather Analytics Platform สำหรับกรุงเทพมหานครและปริมณฑล**
 
+🌐 **[เปิดใช้งานเว็บไซต์ → weather-analytics-platform.vercel.app](https://weather-analytics-platform.vercel.app/)**
+
+เข้าใช้งานผ่านเบราว์เซอร์ได้ทันทีโดยไม่ต้องติดตั้ง เลือกพื้นที่บนแผนที่เพื่อดูสภาพอากาศ พยากรณ์ และ Dashboard ของพื้นที่นั้น
+
 โครงงานที่ผสาน Software Development และ Data Analysis ตั้งแต่ดึงข้อมูลอากาศ จัดเก็บลงฐานข้อมูล ไปจนถึงวิเคราะห์และแสดงผลผ่านแผนที่ กราฟ และ Dashboard
 
 ครอบคลุม **6 จังหวัด และ 79 เขต/อำเภอ** ได้แก่ กรุงเทพมหานคร นนทบุรี ปทุมธานี นครปฐม สมุทรสาคร และสมุทรปราการ รวมจุดอ้างอิงที่เก็บข้อมูล **85 พื้นที่**
@@ -135,7 +139,9 @@ npm run build
 - [ตั้งค่า Supabase และตัวเก็บข้อมูล](docs/supabase-collection.md)
 - [Deploy บน Vercel และรายการตรวจหลัง Deploy](docs/deployment.md)
 
-ต้องตั้งตัวแปรฝั่งเซิร์ฟเวอร์ใน Vercel แยกจาก GitHub Secrets เอกสาร Deploy เป็นขั้นตอนเตรียมใช้งาน ไม่ใช่การยืนยันว่ามีเว็บไซต์ออนไลน์แล้ว
+เว็บไซต์ Deploy บน Vercel แล้วที่ [weather-analytics-platform.vercel.app](https://weather-analytics-platform.vercel.app/) ส่วนการเก็บข้อมูลอัตโนมัติทำงานแยกผ่าน GitHub Actions และ Supabase
+
+หากนำโปรเจกต์ไป Deploy เอง ต้องตั้งตัวแปรฝั่งเซิร์ฟเวอร์ใน Vercel แยกจาก GitHub Secrets ตามคู่มือด้านบน
 
 ## แหล่งข้อมูลและเครดิต
 
