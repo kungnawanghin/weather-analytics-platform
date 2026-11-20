@@ -27,7 +27,9 @@ export default function ScrollExpandMedia({
   // All input devices use native document scrolling. No wheel/touch interception.
   const { scrollYProgress } = useScroll({ target: trackRef, offset: ["start start", "end end"] });
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 160, damping: 32, mass: 0.6 });
-  const progress = useTransform(smoothProgress, (value) => reduceMotion ? 1 : Math.min(1, Math.max(0, value)));
+  // Reduced motion keeps the readable opening composition, not the expanded
+  // end frame (which also fades out the title). Normal scrolling still expands.
+  const progress = useTransform(smoothProgress, (value) => reduceMotion ? 0 : Math.min(1, Math.max(0, value)));
   const width = useTransform(progress, (v) => `calc(min(340px, 85vw) + (100vw - min(340px, 85vw)) * ${v})`);
   const height = useTransform(progress, (v) => `calc(min(420px, 60svh) + (100svh - min(420px, 60svh)) * ${v})`);
   const borderRadius = useTransform(progress, [0, 1], [24, 0]);
