@@ -27,15 +27,17 @@ export default function ScrollExpandMedia({
   // All input devices use native document scrolling. No wheel/touch interception.
   const { scrollYProgress } = useScroll({ target: trackRef, offset: ["start start", "end end"] });
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 160, damping: 32, mass: 0.6 });
-  // Reduced motion keeps the readable opening composition, not the expanded
-  // end frame (which also fades out the title). Normal scrolling still expands.
-  const progress = useTransform(smoothProgress, (value) => reduceMotion ? 0 : Math.min(1, Math.max(0, value)));
+  // Both modes retain the scroll track and user-controlled expansion. Reduced
+  // motion follows the wheel directly, without spring lag or flying text.
+  const progress = useTransform(() => Math.min(1, Math.max(0,
+    reduceMotion ? scrollYProgress.get() : smoothProgress.get(),
+  )));
   const width = useTransform(progress, (v) => `calc(min(340px, 85vw) + (100vw - min(340px, 85vw)) * ${v})`);
   const height = useTransform(progress, (v) => `calc(min(420px, 60svh) + (100svh - min(420px, 60svh)) * ${v})`);
   const borderRadius = useTransform(progress, [0, 1], [24, 0]);
   const titleOpacity = useTransform(progress, [0, 0.65], [1, 0]);
-  const leftText = useTransform(progress, [0, 1], ["0vw", "-75vw"]);
-  const rightText = useTransform(progress, [0, 1], ["0vw", "75vw"]);
+  const leftText = useTransform(progress, (value) => `${reduceMotion ? 0 : -75 * value}vw`);
+  const rightText = useTransform(progress, (value) => `${reduceMotion ? 0 : 75 * value}vw`);
   const backgroundOpacity = useTransform(progress, [0, 1], [1, 0]);
   const words = title.trim().split(/\s+/);
 
@@ -52,7 +54,7 @@ export default function ScrollExpandMedia({
 
   return (
     <div className="observatory-shell text-white">
-      <div ref={trackRef} className={reduceMotion ? "relative h-svh" : "relative h-[220svh]"}>
+      <div ref={trackRef} className="relative h-[220svh]">
         <section aria-label="Weather Analytics introduction" className="sticky top-0 flex h-svh items-center justify-center overflow-hidden">
           <motion.div className="absolute inset-0" style={{ opacity: backgroundOpacity }}>
             {bgImageSrc && <Image src={bgImageSrc} alt="" fill priority sizes="100vw" className="object-cover" />}
