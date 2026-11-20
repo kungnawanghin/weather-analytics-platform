@@ -76,7 +76,8 @@ export default function WeatherMap({ resource, weatherStates, onRetryWeather, se
     const children = geometry.districts.filter((item) => item.area.provinceId === focusedProvinceId);
     if (!children.length) return { x: 0, y: 0, scale: 1 };
     const [[x0, y0], [x1, y1]] = geometry.path.bounds({ type: "FeatureCollection", features: children.map((item) => item.feature) });
-    const scale = Math.min(8, (width - 64) / Math.max(x1 - x0, 1), (height - 88) / Math.max(y1 - y0, 1));
+    // Tighter province framing, retaining space for outlines and decorative depth.
+    const scale = Math.min(8, (width - 40) / Math.max(x1 - x0, 1), (height - 48) / Math.max(y1 - y0, 1));
     return { scale, x: width / 2 - ((x0 + x1) / 2) * scale, y: height / 2 - ((y0 + y1) / 2) * scale };
   }, [geometry, focusedProvinceId, width, height]);
 
